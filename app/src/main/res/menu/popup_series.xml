@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/serieSiguiendo"
+        android:title="Marcar como siguiendo" />
+    <item
+        android:id="@+id/seriePendiente"
+        android:title="Marcar como pendiente"/>
+    <item
+        android:id="@+id/serieVista"
+        android:title="Marcar como vista"/>
+    <item
+        android:id="@+id/serieNada"
+        android:title="Nada"/>
+</menu>

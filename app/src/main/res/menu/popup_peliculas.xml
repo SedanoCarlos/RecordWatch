@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/peliculaFavorita"
+        android:title="Marcar como favorita" />
+    <item
+        android:id="@+id/peliculaPendiente"
+        android:title="Marcar como pendiente"/>
+    <item
+        android:id="@+id/peliculaVista"
+        android:title="Marcar como vista"/>
+    <item
+        android:id="@+id/peliculaNada"
+        android:title="Nada"/>
+</menu>

@@ -1,0 +1,2 @@
+rootProject.name='RecordWatch'
+include ':app'

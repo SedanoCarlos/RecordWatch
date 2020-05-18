@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.recordwatch.recordwatch">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".CambiarUsuario"></activity>
+        <activity android:name=".SeriesVistas" />
+        <activity android:name=".SeriesPendientes" />
+        <activity android:name=".SeriesSiguiendo" />
+        <activity android:name=".PeliculasVistas" />
+        <activity android:name=".PeliculasPendientes" />
+        <activity android:name=".PeliculasFavoritas" />
+        <activity android:name=".TemporadaDetallada" />
+        <activity android:name=".TemporadasActivity" />
+        <activity android:name=".SerieDetallada" />
+        <activity android:name=".SeriesActivity" />
+        <activity android:name=".BuscarSerie" />
+        <activity android:name=".PeliculaDetallada" />
+        <activity android:name=".BuscarPelicula" />
+        <activity android:name=".LicenseActivity" />
+        <activity android:name=".PeliculasActivity" />
+        <activity android:name=".CopiaSeguridad" />
+        <activity android:name=".IniciarSesion">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MainActivity" />
+    </application>
+
+</manifest>

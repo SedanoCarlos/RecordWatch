@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/tvBienvenido"
+        android:layout_width="313dp"
+        android:layout_height="98dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="200dp"
+        android:fontFamily="casual"
+        android:text="BIENVENIDO"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonPeliculas"
+        android:layout_width="160dp"
+        android:layout_height="170dp"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/pelicula"
+        android:onClick="botonPeliculas"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSeries"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBienvenido" />
+
+    <Button
+        android:id="@+id/buttonSeries"
+        android:layout_width="160dp"
+        android:layout_height="170dp"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/series"
+        android:onClick="botonSeries"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonPeliculas"
+        app:layout_constraintTop_toBottomOf="@+id/tvBienvenido" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

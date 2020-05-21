@@ -44,6 +44,8 @@ public class PeliculaDetallada extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pelicula_detallada);
+        this.setTitle(R.string.peliculaDetallada);
+
         titulo = findViewById(R.id.tvTitulo);
         valoracion = findViewById(R.id.tvValoracion);
         sinopsis = findViewById(R.id.tvSinopsis);

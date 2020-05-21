@@ -39,7 +39,7 @@ import java.net.URLEncoder;
 
 public class SerieDetallada extends AppCompatActivity {
 
-    TextView titulo;
+    static TextView titulo;
     TextView valoracion;
     TextView sinopsis;
     ImageView foto;
@@ -49,6 +49,8 @@ public class SerieDetallada extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serie_detallada);
+        this.setTitle(R.string.serieDetallada);
+
         titulo = findViewById(R.id.tvTitulo);
         valoracion = findViewById(R.id.tvValoracion);
         sinopsis = findViewById(R.id.tvSinopsis);

@@ -32,6 +32,8 @@ public class PeliculasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peliculas);
+        this.setTitle(R.string.peliculasPopulares);
+
         nombrePelicula = findViewById(R.id.idTituloEpisodio);
         valoracionPelicula = findViewById(R.id.idValoracionSerie);
         fotoPelicula = findViewById(R.id.idFotoEpisodio);

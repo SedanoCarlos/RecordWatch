@@ -44,6 +44,8 @@ public class SeriesSiguiendo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_siguiendo);
+        this.setTitle(R.string.seriesSiguiendo);
+
         tituloSerie = findViewById(R.id.etTituloPelicula);
         nombreSerie = findViewById(R.id.idTituloEpisodio);
         valoracionSerie = findViewById(R.id.idValoracionSerie);

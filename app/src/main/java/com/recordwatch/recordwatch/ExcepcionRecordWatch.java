@@ -14,7 +14,6 @@ public class ExcepcionRecordWatch extends Exception{
     private String mensajeUsuario;
     private String mensajeAdministrador;
     private Integer codigoError;
-    private String sentenciaSQL;
     /**
      * Este método permite crear un objeto ExcepcionTaller sin datos.
      *

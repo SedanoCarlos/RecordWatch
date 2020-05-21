@@ -32,6 +32,8 @@ public class SeriesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series);
+        this.setTitle(R.string.seriesPopulares);
+
         nombreSerie = findViewById(R.id.idTituloEpisodio);
         valoracionSerie = findViewById(R.id.idValoracionSerie);
         fotoSerie = findViewById(R.id.idFotoEpisodio);

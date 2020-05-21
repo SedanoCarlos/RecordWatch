@@ -44,6 +44,8 @@ public class SeriesPendientes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_pendientes);
+        this.setTitle(R.string.seriesPendientes);
+
         tituloSerie = findViewById(R.id.etTituloPelicula);
         nombreSerie = findViewById(R.id.idTituloEpisodio);
         valoracionSerie = findViewById(R.id.idValoracionSerie);

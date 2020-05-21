@@ -45,6 +45,8 @@ public class TemporadasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temporadas);
+        this.setTitle(R.string.listaTemporada);
+
         nombreTemporada = findViewById(R.id.idNombre);
         numeroCapitulos = findViewById(R.id.idNumeroCapitulos);
         fotoTemporada = findViewById(R.id.idFotoEpisodio);

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">RecordWatch</string>
+    <string name="peliculaDetallada">Informacion Pelicula</string>
+    <string name="serieDetallada">Informacion Serie</string>
+    <string name="temporadaDetallada">Informacion Temporada</string>
+    <string name="peliculasFavoritas">Peliculas Favoritas</string>
+    <string name="peliculasPendientes">Peliculas Pendientes</string>
+    <string name="peliculasVistas">Peliculas Vistas</string>
+    <string name="seriesSiguiendo">Series Siguiendo</string>
+    <string name="seriesPendientes">Series Pendientes</string>
+    <string name="seriesVistas">Series Vistas</string>
+    <string name="peliculasPopulares">Peliculas Populares</string>
+    <string name="seriesPopulares">Series Populares</string>
+    <string name="listaTemporada">Lista Temporadas</string>
+
+
 </resources>

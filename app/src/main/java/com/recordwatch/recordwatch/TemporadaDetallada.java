@@ -42,12 +42,13 @@ public class TemporadaDetallada extends AppCompatActivity {
     AdaptadorEpisodios elAdaptador;
     TextView sinopsis;
     ImageView foto;
-    String sinopsisDefecto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temporada_detallada);
+        this.setTitle("Temporada "+numeroTemporadaElegida);
+
         sinopsis = findViewById(R.id.tvSinopsis);
         sinopsis.setMovementMethod(new ScrollingMovementMethod());
         foto = findViewById(R.id.ivPoster);

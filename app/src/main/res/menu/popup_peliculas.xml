@@ -10,6 +10,6 @@
         android:id="@+id/peliculaVista"
         android:title="Marcar como vista"/>
     <item
-        android:id="@+id/peliculaNada"
-        android:title="Nada"/>
+        android:id="@+id/peliculaSinClasificar"
+        android:title="Sin Clasificar"/>
 </menu>

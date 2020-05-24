@@ -45,6 +45,7 @@ public class SeriesVistas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_vistas);
         this.setTitle(R.string.seriesVistas);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tituloSerie = findViewById(R.id.etTituloPelicula);
         nombreSerie = findViewById(R.id.idTituloEpisodio);

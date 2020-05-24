@@ -33,6 +33,7 @@ public class SeriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series);
         this.setTitle(R.string.seriesPopulares);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nombreSerie = findViewById(R.id.idTituloEpisodio);
         valoracionSerie = findViewById(R.id.idValoracionSerie);

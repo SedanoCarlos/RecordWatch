@@ -33,6 +33,7 @@ public class PeliculasFavoritas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peliculas_favoritas);
         this.setTitle(R.string.peliculasFavoritas);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tituloPelicula = findViewById(R.id.etTituloPelicula);
         nombrePelicula = findViewById(R.id.idTituloEpisodio);

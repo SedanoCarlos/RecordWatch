@@ -48,6 +48,7 @@ public class TemporadaDetallada extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temporada_detallada);
         this.setTitle("Temporada "+numeroTemporadaElegida);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sinopsis = findViewById(R.id.tvSinopsis);
         sinopsis.setMovementMethod(new ScrollingMovementMethod());
@@ -62,10 +63,7 @@ public class TemporadaDetallada extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Sacamos el nombre del elemento seleccionado
-                CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloEpisodio();
-                numeroTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getNumeroTemporada();
-                Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
-                toast.show();
+
                 elAdaptador.notifyItemChanged(miRecycler.getChildAdapterPosition(v));
             }
         });

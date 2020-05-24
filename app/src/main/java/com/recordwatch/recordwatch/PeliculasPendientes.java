@@ -33,6 +33,7 @@ public class PeliculasPendientes extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peliculas_pendientes);
         this.setTitle(R.string.peliculasPendientes);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tituloPelicula = findViewById(R.id.etTituloPelicula);
         nombrePelicula = findViewById(R.id.idTituloEpisodio);

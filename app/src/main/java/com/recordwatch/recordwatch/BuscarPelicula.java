@@ -28,6 +28,8 @@ public class BuscarPelicula extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscar_pelicula);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tituloPelicula = findViewById(R.id.etTituloPelicula);
         nombrePelicula = findViewById(R.id.idTituloEpisodio);
         valoracionPelicula = findViewById(R.id.idValoracionSerie);

@@ -26,12 +26,11 @@ public class AdminSQLite extends SQLiteOpenHelper {
         bdRecordWatch.execSQL("create table usuario(contrasena String primary key)");
         bdRecordWatch.execSQL("create table pelicula_registrada(pelicula_id int primary key,estado String,check (estado in ('F','P','V')))");
         bdRecordWatch.execSQL("create table serie_registrada(serie_id int primary key,estado String,check (estado in ('S','P','V')))");
-        bdRecordWatch.execSQL("create table temporada(serie_id int,numero_temporada int," +
-                "primary key (serie_id, numero_temporada)," +
-                "foreign key(serie_id) references serie_registrada(serie_id))");
+//        bdRecordWatch.execSQL("create table temporada(serie_id int,numero_temporada int," +
+//                "primary key (serie_id, numero_temporada)," +
+//                "foreign key(serie_id) references serie_registrada(serie_id))");
         bdRecordWatch.execSQL("create table episodio(serie_id int,numero_temporada int,numero_episodio int,visto String," +
                 "primary key (serie_id,numero_temporada,numero_episodio)," +
-                "foreign key(serie_id,numero_temporada) references temporada(serie_id, numero_temporada)," +
                 "check (visto in ('S','N')))");
     }
 

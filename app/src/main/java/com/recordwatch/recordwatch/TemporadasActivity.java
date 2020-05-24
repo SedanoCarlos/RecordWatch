@@ -46,6 +46,7 @@ public class TemporadasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temporadas);
         this.setTitle(R.string.listaTemporada);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nombreTemporada = findViewById(R.id.idNombre);
         numeroCapitulos = findViewById(R.id.idNumeroCapitulos);

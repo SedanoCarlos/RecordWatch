@@ -213,12 +213,21 @@ public class ComponenteBD {
         return null;
     }
 
-    public Integer insertarEpisodio(Episodio e) throws ExcepcionRecordWatch {
-        return null;
+    public long insertarEpisodio(Episodio e) throws ExcepcionRecordWatch {
+        conectarBD();
+        ContentValues registro = new ContentValues();
+        registro.put("serie_id", e.getSerieId());
+        registro.put("numero_temporada", e.getNumeroTemporada());
+        registro.put("numero_episodio", e.getNumeroEpisodio());
+        long registrosAfectados = rw.insert("episodio", null, registro);
+        desconectarBD();
+        return registrosAfectados;
     }
 
     public Integer eliminarEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio) throws ExcepcionRecordWatch {
-        return null;
+        conectarBD();
+        int registrosEliminados = rw.delete("episodio", "(serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +") and (numero_episodio=" + numeroEpisodio +")" , null);
+        return registrosEliminados;
     }
 
     public int modificarEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio, Episodio e) throws ExcepcionRecordWatch {
@@ -226,6 +235,17 @@ public class ComponenteBD {
     }
 
     public Episodio leerEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio) throws ExcepcionRecordWatch {
+        conectarBD();
+        Cursor buscar = rw.rawQuery("select serie_id,numero_temporada,numero_episodio from episodio where (serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +") and (numero_episodio=" + numeroEpisodio +")", null);
+        buscar.moveToFirst();
+        if (buscar.moveToFirst()) {
+            Episodio episodio = new Episodio();
+            episodio.setSerieId(buscar.getInt(0));
+            episodio.setNumeroTemporada(buscar.getInt(1));
+            episodio.setNumeroEpisodio(buscar.getInt(2));
+            desconectarBD();
+            return episodio;
+        }
         return null;
     }
 

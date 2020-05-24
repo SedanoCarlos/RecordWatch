@@ -33,7 +33,7 @@ public class PeliculasVistas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peliculas_vistas);
         this.setTitle(R.string.peliculasVistas);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tituloPelicula = findViewById(R.id.etTituloPelicula);
         nombrePelicula = findViewById(R.id.idTituloEpisodio);

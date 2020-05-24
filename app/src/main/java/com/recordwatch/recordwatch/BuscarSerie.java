@@ -32,6 +32,8 @@ public class BuscarSerie extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscar_serie);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tituloSerie = findViewById(R.id.etTituloSerie);
         nombreSerie = findViewById(R.id.idTituloEpisodio);
         valoracionSerie = findViewById(R.id.idValoracionSerie);

@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,22 +30,28 @@ import com.recordwatch.recordwatch.componentes.ComponenteWS;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 
 
-public class PeliculaDetallada extends AppCompatActivity {
+public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech.OnInitListener{
 
     TextView titulo;
     TextView valoracion;
     TextView sinopsis;
     ImageView foto;
     Button peliculaRegistrada;
+    Button leerTexto;
+    TextToSpeech hablar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pelicula_detallada);
         this.setTitle(R.string.peliculaDetallada);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         titulo = findViewById(R.id.tvTitulo);
         valoracion = findViewById(R.id.tvValoracion);
@@ -52,6 +59,8 @@ public class PeliculaDetallada extends AppCompatActivity {
         sinopsis.setMovementMethod(new ScrollingMovementMethod());
         foto = findViewById(R.id.ivPoster);
         peliculaRegistrada = findViewById(R.id.buttonPeliculaRegistrada);
+        leerTexto = findViewById(R.id.buttonLeer);
+        hablar = new TextToSpeech(this,this);
 
         peliculaRegistrada.setOnClickListener(new View.OnClickListener() {
 
@@ -73,6 +82,15 @@ public class PeliculaDetallada extends AppCompatActivity {
 
                 popup.show();//showing popup menu
             }
+        });
+
+        leerTexto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speakOut();
+            }
+
+
         });
 
         Pelicula pelicula = new Pelicula();
@@ -175,5 +193,24 @@ public class PeliculaDetallada extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    public void onInit(int status) {
+        if(status==TextToSpeech.SUCCESS){
+            int result = hablar.setLanguage(Locale.getDefault());
+            if(result==TextToSpeech.LANG_NOT_SUPPORTED || result==TextToSpeech.LANG_MISSING_DATA){
+                Log.e("Lectura en voz","Este lenguaje no es soportado");
+            }else{
+                leerTexto.setEnabled(true);
+            }
+        }else{
+            Log.e("Lectura en voz","Inicialización del lenguaje es fallida");
+        }
+    }
+
+    private void speakOut() {
+        String texto = sinopsis.getText().toString();
+        hablar.speak(texto,TextToSpeech.QUEUE_FLUSH,null);
     }
 }

@@ -4,36 +4,60 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo1"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo1"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CambiarUsuario"></activity>
-        <activity android:name=".SeriesVistas" />
-        <activity android:name=".SeriesPendientes" />
-        <activity android:name=".SeriesSiguiendo" />
-        <activity android:name=".PeliculasVistas" />
-        <activity android:name=".PeliculasPendientes" />
-        <activity android:name=".PeliculasFavoritas" />
-        <activity android:name=".TemporadaDetallada" />
-        <activity android:name=".TemporadasActivity" />
-        <activity android:name=".SerieDetallada" />
-        <activity android:name=".SeriesActivity" />
-        <activity android:name=".BuscarSerie" />
-        <activity android:name=".PeliculaDetallada" />
-        <activity android:name=".BuscarPelicula" />
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".CambiarUsuario"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".CloudBackup" />
+        <activity android:name=".SeriesVistas"
+            android:parentActivityName=".SeriesActivity"/>
+        <activity android:name=".SeriesPendientes"
+            android:parentActivityName=".SeriesActivity"/>
+        <activity android:name=".SeriesSiguiendo"
+            android:parentActivityName=".SeriesActivity"/>
+        <activity android:name=".PeliculasVistas"
+            android:parentActivityName=".PeliculasActivity"/>
+        <activity android:name=".PeliculasPendientes"
+            android:parentActivityName=".PeliculasActivity"/>
+        <activity android:name=".PeliculasFavoritas"
+            android:parentActivityName=".PeliculasActivity"/>
+        <activity android:name=".TemporadaDetallada"
+            android:parentActivityName=".TemporadasActivity"/>
+        <activity android:name=".TemporadasActivity"
+            android:parentActivityName=".SerieDetallada"/>
+        <activity android:name=".SerieDetallada"
+            android:parentActivityName=".SeriesActivity"/>
+        <activity android:name=".SeriesActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".BuscarSerie"
+            android:parentActivityName=".SeriesActivity"/>
+        <activity android:name=".PeliculaDetallada"
+            android:parentActivityName=".PeliculasActivity"/>
+        <activity android:name=".BuscarPelicula"
+            android:parentActivityName=".PeliculasActivity"/>
         <activity android:name=".LicenseActivity" />
-        <activity android:name=".PeliculasActivity" />
-        <activity android:name=".CopiaSeguridad" />
+        <activity android:name=".PeliculasActivity"
+            android:parentActivityName=".MainActivity"/>>
+        <activity android:name=".CopiaSeguridad"
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".IniciarSesion">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />

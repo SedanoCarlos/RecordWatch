@@ -40,17 +40,19 @@
         android:onClick="cambiarContraseña"
         android:text="CAMBIAR CONTRASEÑA"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNuevaContraseña" />
+        app:layout_constraintTop_toBottomOf="@+id/etNuevaContraseña2" />
 
     <EditText
         android:id="@+id/etNuevaContraseña"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:ems="10"
         android:hint="Contraseña nueva"
         android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/tvNuevaContraseña2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNuevaContraseña" />
@@ -66,4 +68,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvActualContraseña" />
+
+    <TextView
+        android:id="@+id/tvNuevaContraseña2"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Vuelve a introducir la nueva contraseña"
+        app:layout_constraintBottom_toTopOf="@+id/etNuevaContraseña2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNuevaContraseña" />
+
+    <EditText
+        android:id="@+id/etNuevaContraseña2"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCambiarContraseña"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNuevaContraseña2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

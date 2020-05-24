@@ -50,6 +50,7 @@ public class SerieDetallada extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serie_detallada);
         this.setTitle(R.string.serieDetallada);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         titulo = findViewById(R.id.tvTitulo);
         valoracion = findViewById(R.id.tvValoracion);

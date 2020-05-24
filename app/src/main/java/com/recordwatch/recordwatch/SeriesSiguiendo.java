@@ -45,6 +45,7 @@ public class SeriesSiguiendo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_siguiendo);
         this.setTitle(R.string.seriesSiguiendo);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tituloSerie = findViewById(R.id.etTituloPelicula);
         nombreSerie = findViewById(R.id.idTituloEpisodio);

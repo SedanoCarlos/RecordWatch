@@ -3,9 +3,11 @@ package com.recordwatch.recordwatch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +30,7 @@ public class BuscarSerie extends AppCompatActivity {
     TextView valoracionSerie;
     static ImageView fotoSerie;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,7 @@ public class BuscarSerie extends AppCompatActivity {
         nombreSerie = findViewById(R.id.idTituloEpisodio);
         valoracionSerie = findViewById(R.id.idValoracionSerie);
         fotoSerie = findViewById(R.id.idFotoEpisodio);
+
     }
 
     public void buscarSerie(View view){
@@ -61,6 +65,7 @@ public class BuscarSerie extends AppCompatActivity {
             }
         });
         miRecycler.setAdapter(elAdaptador);
+
 
         String nSerie = tituloSerie.getText().toString();
         if (nSerie.isEmpty()) {

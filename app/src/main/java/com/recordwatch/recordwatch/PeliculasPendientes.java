@@ -3,9 +3,11 @@ package com.recordwatch.recordwatch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +29,8 @@ public class PeliculasPendientes extends AppCompatActivity {
     TextView nombrePelicula;
     TextView valoracionPelicula;
     static ImageView fotoPelicula;
+    SwipeRefreshLayout refrescar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class PeliculasPendientes extends AppCompatActivity {
         nombrePelicula = findViewById(R.id.idTituloEpisodio);
         valoracionPelicula = findViewById(R.id.idValoracionSerie);
         fotoPelicula = findViewById(R.id.idFotoEpisodio);
+        refrescar = findViewById(R.id.refrescarPeliculasPendientes);
 
         miLista = new ArrayList<Pelicula>();//Lista de objetos
         //miLista=cargarDatos(miLista);//Cargamos los datos del array
@@ -59,6 +64,20 @@ public class PeliculasPendientes extends AppCompatActivity {
             }
         });
         miRecycler.setAdapter(elAdaptador);
+
+        refrescar.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recreate();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refrescar.setRefreshing(false);
+                    }
+                },3000);
+            }
+        });
 
         ArrayList<Pelicula> aux  = new ArrayList<>();
         try {

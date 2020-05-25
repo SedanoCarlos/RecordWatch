@@ -3,9 +3,11 @@ package com.recordwatch.recordwatch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.recordwatch.recordwatch.componentes.ComponenteBD;
 import com.recordwatch.recordwatch.componentes.ComponenteWS;
 
 import java.util.ArrayList;
@@ -25,7 +28,8 @@ public class PeliculasActivity extends AppCompatActivity {
     TextView nombrePelicula;
     TextView valoracionPelicula;
     static ImageView fotoPelicula;
-    static public  int codigoPeliculaElegida;
+    static public int codigoPeliculaElegida;
+    SwipeRefreshLayout refrescar;
 
 
     @Override
@@ -38,13 +42,14 @@ public class PeliculasActivity extends AppCompatActivity {
         nombrePelicula = findViewById(R.id.idTituloEpisodio);
         valoracionPelicula = findViewById(R.id.idValoracionSerie);
         fotoPelicula = findViewById(R.id.idFotoEpisodio);
+        refrescar = findViewById(R.id.refrescarPeliculasPopulares);
 
         miLista = new ArrayList<Pelicula>();//Lista de objetos
         //miLista=cargarDatos(miLista);//Cargamos los datos del array
         miRecycler = (RecyclerView) findViewById(R.id.miRecyclerVistaPeliculasPopulares);
         //Pasos importantes
         miRecycler.setLayoutManager(new LinearLayoutManager(this));
-        elAdaptador = new AdaptadorPeliculas(this,miLista);
+        elAdaptador = new AdaptadorPeliculas(this, miLista);
         elAdaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,17 +64,32 @@ public class PeliculasActivity extends AppCompatActivity {
         });
         miRecycler.setAdapter(elAdaptador);
 
-        ArrayList<Pelicula> aux  = new ArrayList<>();
+        refrescar.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                recreate();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refrescar.setRefreshing(false);
+                    }
+                },3000);
+            }
+        });
+
+        ArrayList<Pelicula> aux = new ArrayList<>();
         try {
             ComponenteWS ws = new ComponenteWS();
             aux = ws.leerPeliculasPopulares();
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }
-        for(int i=0;i<aux.size();i++){
+        for (int i = 0; i < aux.size(); i++) {
             miLista.add(aux.get(i));
             elAdaptador.notifyItemChanged(i);
         }
+//        Toast.makeText(this,""+getApplicationContext().get,Toast.LENGTH_SHORT).show();
     }
 
 
@@ -87,27 +107,25 @@ public class PeliculasActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.opcionPeliculaFavorita) {
-            Intent i = new Intent(this,PeliculasFavoritas.class);
+            Intent i = new Intent(this, PeliculasFavoritas.class);
             startActivity(i);
-        }
-        else if(id == R.id.opcionPeliculaPendiente){
-            Intent i = new Intent(this,PeliculasPendientes.class);
+        } else if (id == R.id.opcionPeliculaPendiente) {
+            Intent i = new Intent(this, PeliculasPendientes.class);
             startActivity(i);
-        }
-        else if(id == R.id.opcionPeliculaVista){
-            Intent i = new Intent(this,PeliculasVistas.class);
+        } else if (id == R.id.opcionPeliculaVista) {
+            Intent i = new Intent(this, PeliculasVistas.class);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void menuBuscarPelicula(View view){
-        Intent i = new Intent(this,BuscarPelicula.class);
+    public void menuBuscarPelicula(View view) {
+        Intent i = new Intent(this, BuscarPelicula.class);
         startActivity(i);
     }
 
     private void mostrarPelicula() {
-        Intent i = new Intent(this,PeliculaDetallada.class);
+        Intent i = new Intent(this, PeliculaDetallada.class);
         startActivity(i);
     }
 

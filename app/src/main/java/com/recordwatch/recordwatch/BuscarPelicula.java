@@ -3,9 +3,11 @@ package com.recordwatch.recordwatch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +26,7 @@ public class BuscarPelicula extends AppCompatActivity {
     static ImageView fotoPelicula;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,7 @@ public class BuscarPelicula extends AppCompatActivity {
         nombrePelicula = findViewById(R.id.idTituloEpisodio);
         valoracionPelicula = findViewById(R.id.idValoracionSerie);
         fotoPelicula = findViewById(R.id.idFotoEpisodio);
+
     }
 
     public void buscarPelicula(View view) {
@@ -57,6 +61,7 @@ public class BuscarPelicula extends AppCompatActivity {
             }
         });
         miRecycler.setAdapter(elAdaptador);
+
 
         String nPelicula = tituloPelicula.getText().toString();
         if (nPelicula.isEmpty()) {

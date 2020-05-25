@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.recordwatch.recordwatch.componentes.ComponenteBD;
 
 import java.util.ArrayList;
 
@@ -60,6 +62,7 @@ public class AdaptadorSeries extends RecyclerView.Adapter<AdaptadorSeries.ViewHo
         TextView titulo;
         TextView valoracion;
         ImageView foto;
+        Button estado;
 
 
 
@@ -68,11 +71,35 @@ public class AdaptadorSeries extends RecyclerView.Adapter<AdaptadorSeries.ViewHo
             titulo=(TextView) itemView.findViewById(R.id.idTituloEpisodio);
             valoracion=(TextView) itemView.findViewById(R.id.idValoracionSerie);
             foto=(ImageView) itemView.findViewById(R.id.idFotoEpisodio);
+            estado = (Button) itemView.findViewById(R.id.buttonEstadoSerie);
 
         }
 
         public void asignarDatos(Serie serie) {
             //Se asigna los datos del objeto recibido a las variables
+            estado.setVisibility(View.INVISIBLE);
+            if ((mContext.getClass().getSimpleName().equals("SeriesActivity")) ||
+                    (mContext.getClass().getSimpleName().equals("BuscarSerie"))) {
+                try {
+                    Serie aux = new Serie();
+                    ComponenteBD bd = new ComponenteBD(mContext);
+                    aux = bd.leerSerie(serie.getSerieId());
+                    if (aux != null) {
+                        estado.setVisibility(View.VISIBLE);
+                        if (aux.getEstado().equals("S")) {
+                            estado.setBackgroundResource(R.drawable.ojo);
+                        } else if (aux.getEstado().equals("P")) {
+                            estado.setBackgroundResource(R.drawable.pendiente);
+                        } else if (aux.getEstado().equals("V")) {
+                            estado.setBackgroundResource(R.drawable.ojotachado);
+                        }
+                    } else {
+                        estado.setVisibility(View.INVISIBLE);
+                    }
+                } catch (ExcepcionRecordWatch excepcionRecordWatch) {
+                    excepcionRecordWatch.printStackTrace();
+                }
+            }
             String poster = serie.getRutaPoster();
             titulo.setText(serie.getTitulo());
             valoracion.setText("Valoración : "+serie.getValoracion());

@@ -50,7 +50,6 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pelicula_detallada);
         this.setTitle(R.string.peliculaDetallada);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         titulo = findViewById(R.id.tvTitulo);

@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import com.recordwatch.recordwatch.componentes.ComponenteBD;
 
+import java.io.File;
+import java.io.IOException;
+
 import static com.recordwatch.recordwatch.IniciarSesion.saveValuePreference;
 
 public class LicenseActivity extends AppCompatActivity {
@@ -46,6 +49,12 @@ public class LicenseActivity extends AppCompatActivity {
                 password.setText("");
                 saveValuePreference(getApplicationContext(), false);
                 Toast.makeText(this, "Se ha registrado su contraseña.", Toast.LENGTH_SHORT).show();
+                File carpetaFiles = new File(getFilesDir(),"RecordWatch");
+                try {
+                    carpetaFiles.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Intent i = new Intent(this, IniciarSesion.class);
                 startActivity(i);
             }else{

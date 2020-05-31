@@ -39,6 +39,7 @@ public class TemporadasActivity extends AppCompatActivity {
     static ImageView fotoTemporada;
     static public int numeroTemporadaElegida;
     static public int primeraTemporada;
+    static public String tituloTemporadaElegida;
 
 
     @Override
@@ -64,6 +65,7 @@ public class TemporadasActivity extends AppCompatActivity {
                 //Sacamos el nombre del elemento seleccionado
                 CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
                 numeroTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getNumeroTemporada();
+                tituloTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
                 Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
                 toast.show();
                 mostrarTemporada();

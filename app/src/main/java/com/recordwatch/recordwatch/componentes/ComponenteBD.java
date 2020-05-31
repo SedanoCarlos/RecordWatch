@@ -58,9 +58,9 @@ public class ComponenteBD {
         return registrosAfectados;
     }
 
-    public Integer eliminarUsuario(Integer contrasena) throws ExcepcionRecordWatch {
-        return 0;
-    }
+//    public Integer eliminarUsuario(Integer contrasena) throws ExcepcionRecordWatch {
+//        return 0;
+//    }
 
     public long modificarUsuario(Usuario usuarioViejo, Usuario usuarioNuevo) throws ExcepcionRecordWatch {
         conectarBD();
@@ -81,7 +81,9 @@ public class ComponenteBD {
             desconectarBD();
             return usuario;
         }
+        desconectarBD();
         return null;
+
     }
 
     public long insertarPelicula(Pelicula p) throws ExcepcionRecordWatch {
@@ -97,6 +99,7 @@ public class ComponenteBD {
     public Integer eliminarPelicula(Integer peliculaId) throws ExcepcionRecordWatch {
         conectarBD();
         int registrosEliminados = rw.delete("pelicula_registrada", "pelicula_id=" + peliculaId , null);
+        desconectarBD();
         return registrosEliminados;
     }
 
@@ -121,6 +124,7 @@ public class ComponenteBD {
             desconectarBD();
             return pelicula;
         }
+        desconectarBD();
         return null;
     }
 
@@ -136,6 +140,7 @@ public class ComponenteBD {
                 miLista.add(pelicula);
             }while(cursor.moveToNext());
         }
+        desconectarBD();
         return miLista;
     }
 
@@ -152,6 +157,7 @@ public class ComponenteBD {
     public Integer eliminarSerie(Integer serieId) throws ExcepcionRecordWatch {
         conectarBD();
         int registrosEliminados = rw.delete("serie_registrada", "serie_id=" + serieId , null);
+        desconectarBD();
         return registrosEliminados;
     }
 
@@ -161,6 +167,7 @@ public class ComponenteBD {
         registro.put("serie_id", s.getSerieId());
         registro.put("estado", s.getEstado());
         long registrosModificados = rw.update("serie_registrada", registro, "serie_id=" + serieId , null);        desconectarBD();
+        desconectarBD();
         return registrosModificados;
     }
 
@@ -175,6 +182,7 @@ public class ComponenteBD {
             desconectarBD();
             return serie;
         }
+        desconectarBD();
         return null;
     }
 
@@ -190,15 +198,29 @@ public class ComponenteBD {
                 miLista.add(serie);
             }while(cursor.moveToNext());
         }
+        desconectarBD();
         return miLista;
     }
 
-    public Integer insertarTemporada(Temporada t) throws ExcepcionRecordWatch {
-        return null;
+    public long insertarTemporada(Temporada t) throws ExcepcionRecordWatch {
+        conectarBD();
+        ContentValues registro = new ContentValues();
+        registro.put("serie_id", t.getSerieId());
+        registro.put("numero_temporada", t.getNumeroTemporada());
+        long registrosAfectados = rw.insert("temporada", null, registro);
+        desconectarBD();
+        return registrosAfectados;
     }
 
     public Integer eliminarTemporada(Integer serieId, Integer numeroTemporada) throws ExcepcionRecordWatch {
         return null;
+    }
+
+    public Integer eliminarTemporadas(Integer serieId) throws ExcepcionRecordWatch {
+        conectarBD();
+        int registrosEliminados = rw.delete("temporada", "(serie_id=" + serieId +")" , null);
+        desconectarBD();
+        return registrosEliminados;
     }
 
     public int modificarTemporada(Integer serieId, int numeroTemporada, Temporada t) throws ExcepcionRecordWatch {
@@ -210,7 +232,19 @@ public class ComponenteBD {
     }
 
     public ArrayList<Temporada> leerTemporadas(Integer serieId) throws ExcepcionRecordWatch {
-        return null;
+        ArrayList<Temporada> miLista = new ArrayList<>();
+        conectarBD();
+        Cursor cursor = rw.rawQuery("select serie_id,numero_temporada from temporada where serie_id = "+serieId+"", null);
+        if(cursor.moveToFirst()) {
+            do {
+                Temporada temporada = new Temporada();
+                temporada.setSerieId(cursor.getInt(0));
+                temporada.setNumeroTemporada(cursor.getInt(1));
+                miLista.add(temporada);
+            }while(cursor.moveToNext());
+        }
+        desconectarBD();
+        return miLista;
     }
 
     public long insertarEpisodio(Episodio e) throws ExcepcionRecordWatch {
@@ -219,6 +253,7 @@ public class ComponenteBD {
         registro.put("serie_id", e.getSerieId());
         registro.put("numero_temporada", e.getNumeroTemporada());
         registro.put("numero_episodio", e.getNumeroEpisodio());
+        registro.put("visto",e.getVisto());
         long registrosAfectados = rw.insert("episodio", null, registro);
         desconectarBD();
         return registrosAfectados;
@@ -227,6 +262,14 @@ public class ComponenteBD {
     public Integer eliminarEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio) throws ExcepcionRecordWatch {
         conectarBD();
         int registrosEliminados = rw.delete("episodio", "(serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +") and (numero_episodio=" + numeroEpisodio +")" , null);
+        desconectarBD();
+        return registrosEliminados;
+    }
+
+    public Integer eliminarEpisodios(Integer serieId) throws ExcepcionRecordWatch {
+        conectarBD();
+        int registrosEliminados = rw.delete("episodio", "(serie_id=" + serieId +")" , null);
+        desconectarBD();
         return registrosEliminados;
     }
 
@@ -246,11 +289,25 @@ public class ComponenteBD {
             desconectarBD();
             return episodio;
         }
+        desconectarBD();
         return null;
     }
 
     public ArrayList<Episodio> leerEpisodios(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
-        return null;
+        ArrayList<Episodio> miLista = new ArrayList<>();
+        conectarBD();
+        Cursor cursor = rw.rawQuery("select serie_id,numero_temporada,numero_episodio from episodio where (serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +")", null);
+        if(cursor.moveToFirst()) {
+            do {
+                Episodio episodio = new Episodio();
+                episodio.setSerieId(cursor.getInt(0));
+                episodio.setNumeroTemporada(cursor.getInt(1));
+                episodio.setNumeroEpisodio(cursor.getInt(2));
+                miLista.add(episodio);
+            }while(cursor.moveToNext());
+        }
+        desconectarBD();
+        return miLista;
     }
 
 

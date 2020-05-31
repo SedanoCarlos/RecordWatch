@@ -23,7 +23,6 @@
         </activity>
         <activity android:name=".CambiarUsuario"
             android:parentActivityName=".MainActivity"/>
-        <activity android:name=".CloudBackup" />
         <activity android:name=".SeriesVistas"
             android:parentActivityName=".SeriesActivity"/>
         <activity android:name=".SeriesPendientes"
@@ -40,19 +39,17 @@
             android:parentActivityName=".TemporadasActivity"/>
         <activity android:name=".TemporadasActivity"
             android:parentActivityName=".SerieDetallada"/>
-        <activity android:name=".SerieDetallada"
-            android:parentActivityName=".SeriesActivity"/>
+        <activity android:name=".SerieDetallada"/>
         <activity android:name=".SeriesActivity"
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".BuscarSerie"
             android:parentActivityName=".SeriesActivity"/>
-        <activity android:name=".PeliculaDetallada"
-            android:parentActivityName=".PeliculasActivity"/>
+        <activity android:name=".PeliculaDetallada"/>
         <activity android:name=".BuscarPelicula"
             android:parentActivityName=".PeliculasActivity"/>
         <activity android:name=".LicenseActivity" />
         <activity android:name=".PeliculasActivity"
-            android:parentActivityName=".MainActivity"/>>
+            android:parentActivityName=".MainActivity"/>
         <activity android:name=".CopiaSeguridad"
             android:parentActivityName=".MainActivity"/>
         <activity android:name=".IniciarSesion">

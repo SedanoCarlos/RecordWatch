@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 
 public class SerieDetallada extends AppCompatActivity {
@@ -122,6 +123,22 @@ public class SerieDetallada extends AppCompatActivity {
             aux = bd.leerSerie(codigoSerieElegida);
             Serie serie = new Serie();
             if (aux == null) {
+                ComponenteBD bd2 = new ComponenteBD(this);
+                ComponenteWS ws = new ComponenteWS();
+                ArrayList<Temporada> listaTemporadas = new ArrayList<>();
+                listaTemporadas = bd.leerTemporadas(codigoSerieElegida);
+                if(listaTemporadas == null){
+                    listaTemporadas = ws.leerTemporadas(codigoSerieElegida);
+                    for (int i = 0; i < listaTemporadas.size(); i++) {
+                        Temporada temporada = new Temporada();
+                        temporada.setSerieId(codigoSerieElegida);
+                        temporada.setNumeroTemporada(i);
+                        bd2.insertarTemporada(temporada);
+                    }
+                }
+                Log.d("Prueba",""+bd2.leerTemporadas(codigoSerieElegida));
+
+
                 serie.setSerieId(codigoSerieElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     serie.setEstado("P");
@@ -135,7 +152,7 @@ public class SerieDetallada extends AppCompatActivity {
                     serie.setEstado("V");
                     bd.insertarSerie(serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
-                } else if (item.getTitle().equals("Nada")) {
+                } else if (item.getTitle().equals("Sin Clasificar")) {
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }
             }else{
@@ -152,8 +169,10 @@ public class SerieDetallada extends AppCompatActivity {
                     serie.setEstado("V");
                     bd.modificarSerie(codigoSerieElegida,serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
-                } else if (item.getTitle().equals("Nada")) {
+                } else if (item.getTitle().equals("Sin Clasificar")) {
                     bd.eliminarSerie(codigoSerieElegida);
+                    bd.eliminarTemporadas(codigoSerieElegida);
+                    bd.eliminarEpisodios(codigoSerieElegida);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }
             }

@@ -147,7 +147,7 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
                     pelicula.setEstado("V");
                     bd.insertarPelicula(pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
-                } else if (item.getTitle().equals("Nada")) {
+                } else if (item.getTitle().equals("Sin Clasificar")) {
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }
             }else{
@@ -164,7 +164,7 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
                     pelicula.setEstado("V");
                     bd.modificarPelicula(codigoPeliculaElegida,pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
-                } else if (item.getTitle().equals("Nada")) {
+                } else if (item.getTitle().equals("Sin Clasificar")) {
                     bd.eliminarPelicula(codigoPeliculaElegida);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }

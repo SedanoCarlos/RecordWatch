@@ -26,6 +26,7 @@ import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegid
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.numeroTemporadaElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.primeraTemporada;
+import static com.recordwatch.recordwatch.TemporadasActivity.tituloTemporadaElegida;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,7 +48,7 @@ public class TemporadaDetallada extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temporada_detallada);
-        this.setTitle("Temporada "+numeroTemporadaElegida);
+        this.setTitle(""+tituloTemporadaElegida);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sinopsis = findViewById(R.id.tvSinopsis);

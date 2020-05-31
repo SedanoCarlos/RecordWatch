@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.recordwatch.recordwatch.componentes.ComponenteBD;
+import com.recordwatch.recordwatch.componentes.ComponenteWS;
 
 import java.util.ArrayList;
 
@@ -117,23 +118,46 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
             ComponenteBD bd = null;
             try {
                 bd = new ComponenteBD(mContext);
-                aux = bd.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
-                Episodio episodio = new Episodio();
-                if (aux == null) {
-                    episodio.setSerieId(codigoSerieElegida);
-                    episodio.setNumeroTemporada(numeroTemporadaElegida);
-                    episodio.setNumeroEpisodio(position);
-                    bd.insertarEpisodio(episodio);
-                    Log.e("EPISODIO INSERTADO",""+episodio);
-                    visto.setBackgroundResource(R.drawable.ojotachado);
-                } else {
-                    bd.eliminarEpisodio(codigoSerieElegida,numeroTemporadaElegida,position);
-                    Log.e("EPISODIO ELIMINADO","Serie:"+codigoSerieElegida+",Temporada:"+numeroTemporadaElegida+",Episodio:"+position);
-                    visto.setBackgroundResource(R.drawable.ojo);
+                if (bd.leerSerie(codigoSerieElegida) != null) {
+                    aux = bd.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
+                    Episodio episodio = new Episodio();
+                    if (aux == null) {
+                        episodio.setSerieId(codigoSerieElegida);
+                        episodio.setNumeroTemporada(numeroTemporadaElegida);
+                        episodio.setNumeroEpisodio(position);
+                        bd.insertarEpisodio(episodio);
+                        Log.d("EPISODIO INSERTADO", "" + episodio);
+                        visto.setBackgroundResource(R.drawable.ojotachado);
+                    } else {
+                        bd.eliminarEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
+                        Log.d("EPISODIO ELIMINADO", "Serie:" + codigoSerieElegida + ",Temporada:" + numeroTemporadaElegida + ",Episodio:" + position);
+                        visto.setBackgroundResource(R.drawable.ojo);
+                    }
+
+                    boolean episodiosVistos = true;
+                    ComponenteWS ws = new ComponenteWS();
+                    int numeroTemporadas  = (bd.leerTemporadas(codigoSerieElegida)).size();
+                    for (int i=0;i<numeroTemporadas;i++){
+                        int numeroEpisodiosWS = (ws.leerTemporada(codigoSerieElegida,i)).getNumeroCapitulos();
+                        int numeroEpisodiosBD = (bd.leerEpisodios(codigoSerieElegida,i)).size();
+                        if(numeroEpisodiosWS != numeroEpisodiosBD){
+                            episodiosVistos = false;
+                            break;
+                        }
+                    }
+                    if(episodiosVistos = true){
+                        Serie serie = new Serie();
+                        serie.setSerieId(codigoSerieElegida);
+                        serie.setEstado("V");
+                        bd.modificarSerie(codigoSerieElegida,serie);
+                    }
+                }else{
+                    Toast.makeText(mContext,"Primero indica la serie como Pendiente o Siguiendo",Toast.LENGTH_LONG).show();
                 }
-            } catch (ExcepcionRecordWatch excepcionRecordWatch) {
-                excepcionRecordWatch.printStackTrace();
-            }
+                } catch(ExcepcionRecordWatch excepcionRecordWatch){
+                    excepcionRecordWatch.printStackTrace();
+                }
+
 
         }
     }

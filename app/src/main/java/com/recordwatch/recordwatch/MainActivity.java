@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.itemCopiaSeguridad) {
-                Intent i = new Intent(this,CloudBackup.class);
+                Intent i = new Intent(this,CopiaSeguridad.class);
                 startActivity(i);
         }
         else if(id == R.id.itemCambiarContraseña){

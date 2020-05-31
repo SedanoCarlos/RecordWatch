@@ -140,7 +140,7 @@ public class ComponenteWS {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20; i++) {
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 Pelicula pelicula = new Pelicula();
@@ -255,7 +255,7 @@ public class ComponenteWS {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 20; i++) {
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 Serie serie = new Serie();
@@ -324,7 +324,7 @@ public class ComponenteWS {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 40; i++) {
             JSONObject jsonObject = null;
             try {
                 jsonObject = new JSONObject(response);
@@ -378,7 +378,7 @@ public class ComponenteWS {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 40; i++) {
             try {
                 JSONObject jsonObject = new JSONObject(response);
                 Episodio episodio = new Episodio();

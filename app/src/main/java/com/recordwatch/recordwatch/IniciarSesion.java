@@ -15,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.recordwatch.recordwatch.componentes.ComponenteBD;
+import com.recordwatch.recordwatch.hash.sha;
+
+import java.math.BigInteger;
 
 
 public class IniciarSesion extends AppCompatActivity {
@@ -22,6 +25,8 @@ public class IniciarSesion extends AppCompatActivity {
     static String PREFS_KEY = "mispreferencias";
     TextView pass;
     Button login;
+    private final String SHA = "SHA-1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,7 @@ public class IniciarSesion extends AppCompatActivity {
         }else{
             try {
                 ComponenteBD bd = new ComponenteBD(this);
-                usuario = bd.leerUsuario(contraseña);
+                usuario = bd.leerUsuario(passwordConvertHash().toString(16));
             } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             }
             if (usuario != null) {
@@ -75,6 +80,17 @@ public class IniciarSesion extends AppCompatActivity {
             }
 
         }
+    }
+
+    private BigInteger passwordConvertHash() {
+        byte[] inputData = pass.getText().toString().getBytes();
+        byte[] outputData = new byte[0];
+        try {
+            outputData = sha.encryptSHA(inputData, SHA);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new BigInteger(1, outputData);
     }
 
 

@@ -1,4 +1,4 @@
-package com.recordwatch.recordwatch;
+package com.recordwatch.recordwatch.adaptadores;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
+import com.recordwatch.recordwatch.ExcepcionRecordWatch;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Pelicula;
+import com.recordwatch.recordwatch.R;
+
 
 import java.util.ArrayList;
 
@@ -81,8 +85,8 @@ public class AdaptadorPeliculas extends RecyclerView.Adapter<AdaptadorPeliculas.
                     (mContext.getClass().getSimpleName().equals("BuscarPelicula"))) {
                 try {
                     Pelicula aux = new Pelicula();
-                    ComponenteBD bd = new ComponenteBD(mContext);
-                    aux = bd.leerPelicula(pelicula.getPeliculaId());
+                    ComponenteCAD cad = new ComponenteCAD(mContext);
+                    aux = cad.leerPeliculaBD(pelicula.getPeliculaId());
                     if (aux != null) {
                         estado.setVisibility(View.VISIBLE);
                         if (aux.getEstado().equals("F")) {

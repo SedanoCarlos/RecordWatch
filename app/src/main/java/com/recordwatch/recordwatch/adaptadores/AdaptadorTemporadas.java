@@ -1,4 +1,4 @@
-package com.recordwatch.recordwatch;
+package com.recordwatch.recordwatch.adaptadores;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.recordwatch.recordwatch.R;
+import com.recordwatch.recordwatch.pojos.Temporada;
 
 import java.util.ArrayList;
 

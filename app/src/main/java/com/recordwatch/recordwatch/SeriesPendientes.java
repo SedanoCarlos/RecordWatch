@@ -6,27 +6,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.recordwatch.recordwatch.adaptadores.AdaptadorSeries;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.recordwatch.recordwatch.pojos.Serie;
 
 import java.util.ArrayList;
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;

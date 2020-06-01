@@ -2,18 +2,16 @@ package com.recordwatch.recordwatch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.hash.sha;
+import com.recordwatch.recordwatch.pojos.Usuario;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +43,8 @@ public class LicenseActivity extends AppCompatActivity {
         if (!pass.isEmpty() && !pass2.isEmpty()) {
             if(pass.equals(pass2)) {
                 try {
-                    ComponenteBD bd = new ComponenteBD(this);
-                    bd.insertarUsuario(usuario);
+                    ComponenteCAD cad = new ComponenteCAD(this);
+                    cad.insertarUsuario(usuario);
                 } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
                 }

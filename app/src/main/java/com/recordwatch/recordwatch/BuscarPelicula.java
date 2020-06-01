@@ -3,17 +3,19 @@ package com.recordwatch.recordwatch;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
+
+import com.recordwatch.recordwatch.adaptadores.AdaptadorPeliculas;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Pelicula;
+
 import java.util.ArrayList;
 import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 
@@ -69,8 +71,8 @@ public class BuscarPelicula extends AppCompatActivity {
             return;
         }
         try {
-            ComponenteWS ws = new ComponenteWS();
-            aux = ws.buscarPelicula(nPelicula);
+            ComponenteCAD cad = new ComponenteCAD(this);
+            aux = cad.buscarPelicula(nPelicula);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }

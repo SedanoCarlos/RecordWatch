@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.recordwatch.recordwatch.adaptadores.AdaptadorPeliculas;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Pelicula;
 
 import java.util.ArrayList;
 import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;

@@ -1,9 +1,6 @@
 package com.recordwatch.recordwatch;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -17,24 +14,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Serie;
+import com.recordwatch.recordwatch.pojos.Temporada;
 
-import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 
@@ -45,6 +31,9 @@ public class SerieDetallada extends AppCompatActivity {
     TextView sinopsis;
     ImageView foto;
     Button serieRegistrada;
+    Button leerTexto;
+    private TtsManager ttsManager = null;
+    private int stopTtsManager = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +46,15 @@ public class SerieDetallada extends AppCompatActivity {
         sinopsis = findViewById(R.id.tvSinopsis);
         sinopsis.setMovementMethod(new ScrollingMovementMethod());
         foto = findViewById(R.id.ivPoster);
-
         serieRegistrada = findViewById(R.id.buttonSerieRegistrada);
+        leerTexto = findViewById(R.id.buttonLeer);
+
+        leerTexto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readingDescription();
+            }
+        });
 
         serieRegistrada.setOnClickListener(new View.OnClickListener() {
 
@@ -84,8 +80,8 @@ public class SerieDetallada extends AppCompatActivity {
 
         Serie serie = new Serie();
         try {
-            ComponenteBD bd = new ComponenteBD(this);
-            serie = bd.leerSerie(codigoSerieElegida);
+            ComponenteCAD cad = new ComponenteCAD(this);
+            serie = cad.leerSerieBD(codigoSerieElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
@@ -95,11 +91,11 @@ public class SerieDetallada extends AppCompatActivity {
             serieRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
         }
 
-        ComponenteWS ws = null;
+        ComponenteCAD cad2 = null;
         serie = new Serie();
         try {
-            ws = new ComponenteWS();
-            serie = ws.leerSerie(codigoSerieElegida);
+            cad2 = new ComponenteCAD(this);
+            serie = cad2.leerSerieWS(codigoSerieElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
@@ -113,44 +109,46 @@ public class SerieDetallada extends AppCompatActivity {
         } else {
             Glide.with(SerieDetallada.this).load(poster).placeholder(R.drawable.series).into(foto);
         }
+
+        checkDescription();
     }
 
     public void cambiarEstado(MenuItem item){
         Serie aux = new Serie();
-        ComponenteBD bd = null;
+        ComponenteCAD cad = null;
         try {
-            bd = new ComponenteBD(this);
-            aux = bd.leerSerie(codigoSerieElegida);
+            cad = new ComponenteCAD(this);
+            aux = cad.leerSerieBD(codigoSerieElegida);
             Serie serie = new Serie();
             if (aux == null) {
-                ComponenteBD bd2 = new ComponenteBD(this);
-                ComponenteWS ws = new ComponenteWS();
+                ComponenteCAD cad2 = new ComponenteCAD(this);
+                ComponenteCAD cad3 = new ComponenteCAD(this);
                 ArrayList<Temporada> listaTemporadas = new ArrayList<>();
-                listaTemporadas = bd.leerTemporadas(codigoSerieElegida);
+                listaTemporadas = cad.leerTemporadasBD(codigoSerieElegida);
                 if(listaTemporadas == null){
-                    listaTemporadas = ws.leerTemporadas(codigoSerieElegida);
+                    listaTemporadas = cad3.leerTemporadasWS(codigoSerieElegida);
                     for (int i = 0; i < listaTemporadas.size(); i++) {
                         Temporada temporada = new Temporada();
                         temporada.setSerieId(codigoSerieElegida);
                         temporada.setNumeroTemporada(i);
-                        bd2.insertarTemporada(temporada);
+                        cad2.insertarTemporada(temporada);
                     }
                 }
-                Log.d("Prueba",""+bd2.leerTemporadas(codigoSerieElegida));
+                Log.d("Prueba",""+cad2.leerTemporadasBD(codigoSerieElegida));
 
 
                 serie.setSerieId(codigoSerieElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     serie.setEstado("P");
-                    bd.insertarSerie(serie);
+                    cad.insertarSerie(serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.pendiente));
                 } else if (item.getTitle().equals("Marcar como siguiendo")) {
                     serie.setEstado("S");
-                    bd.insertarSerie(serie);
+                    cad.insertarSerie(serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.ojo));
                 } else if (item.getTitle().equals("Marcar como vista")) {
                     serie.setEstado("V");
-                    bd.insertarSerie(serie);
+                    cad.insertarSerie(serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
                 } else if (item.getTitle().equals("Sin Clasificar")) {
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
@@ -159,20 +157,20 @@ public class SerieDetallada extends AppCompatActivity {
                 serie.setSerieId(codigoSerieElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     serie.setEstado("P");
-                    bd.modificarSerie(codigoSerieElegida,serie);
+                    cad.modificarSerie(codigoSerieElegida,serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.pendiente));
                 } else if (item.getTitle().equals("Marcar como siguiendo")) {
                     serie.setEstado("S");
-                    bd.modificarSerie(codigoSerieElegida,serie);
+                    cad.modificarSerie(codigoSerieElegida,serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.ojo));
                 } else if (item.getTitle().equals("Marcar como vista")) {
                     serie.setEstado("V");
-                    bd.modificarSerie(codigoSerieElegida,serie);
+                    cad.modificarSerie(codigoSerieElegida,serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
                 } else if (item.getTitle().equals("Sin Clasificar")) {
-                    bd.eliminarSerie(codigoSerieElegida);
-                    bd.eliminarTemporadas(codigoSerieElegida);
-                    bd.eliminarEpisodios(codigoSerieElegida);
+                    cad.eliminarSerie(codigoSerieElegida);
+                    cad.eliminarTemporadas(codigoSerieElegida);
+                    cad.eliminarEpisodios(codigoSerieElegida);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }
             }
@@ -185,8 +183,8 @@ public class SerieDetallada extends AppCompatActivity {
     public void comprobarEstado(){
         Serie serie = new Serie();
         try {
-            ComponenteBD bd = new ComponenteBD(this);
-            serie = bd.leerSerie(codigoSerieElegida);
+            ComponenteCAD cad = new ComponenteCAD(this);
+            serie = cad.leerSerieBD(codigoSerieElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
@@ -202,5 +200,36 @@ public class SerieDetallada extends AppCompatActivity {
     public void mostrarTemporadas(View view) {
         Intent i = new Intent(this,TemporadasActivity.class);
         startActivity(i);
+    }
+
+    private void checkDescription() {
+        if (!sinopsis.getText().toString().isEmpty()) {
+            ttsManager = new TtsManager();
+            ttsManager.init(this);
+            leerTexto.setVisibility(View.VISIBLE);
+        } else {
+            leerTexto.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void readingDescription() {
+        switch (stopTtsManager) {
+            case 0:
+                stopTtsManager = 1;
+                ttsManager.initQueue(sinopsis.getText().toString());
+                break;
+            case 1:
+                stopTtsManager = 0;
+                ttsManager.stop();
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ttsManager != null) {
+            ttsManager.shutDown();
+        }
     }
 }

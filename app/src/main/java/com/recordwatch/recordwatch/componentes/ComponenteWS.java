@@ -6,38 +6,18 @@
 package com.recordwatch.recordwatch.componentes;
 
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
-import com.recordwatch.recordwatch.Episodio;
+import com.recordwatch.recordwatch.pojos.Episodio;
 import com.recordwatch.recordwatch.ExcepcionRecordWatch;
 import com.recordwatch.recordwatch.JSONTask;
-import com.recordwatch.recordwatch.Pelicula;
-import com.recordwatch.recordwatch.PeliculaDetallada;
-import com.recordwatch.recordwatch.R;
-import com.recordwatch.recordwatch.Serie;
-import com.recordwatch.recordwatch.Temporada;
-import com.recordwatch.recordwatch.TemporadaDetallada;
+import com.recordwatch.recordwatch.pojos.Pelicula;
+import com.recordwatch.recordwatch.pojos.Serie;
+import com.recordwatch.recordwatch.pojos.Temporada;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static com.recordwatch.recordwatch.TemporadasActivity.numeroTemporadaElegida;

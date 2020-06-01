@@ -1,38 +1,28 @@
 package com.recordwatch.recordwatch;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.recordwatch.recordwatch.adaptadores.AdaptadorEpisodios;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.componentes.ComponenteWS;
+import com.recordwatch.recordwatch.pojos.Episodio;
+import com.recordwatch.recordwatch.pojos.Temporada;
 
-import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
+import static com.recordwatch.recordwatch.CopiaSeguridad.cad;
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.numeroTemporadaElegida;
-import static com.recordwatch.recordwatch.TemporadasActivity.primeraTemporada;
 import static com.recordwatch.recordwatch.TemporadasActivity.tituloTemporadaElegida;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 
@@ -43,6 +33,9 @@ public class TemporadaDetallada extends AppCompatActivity {
     AdaptadorEpisodios elAdaptador;
     TextView sinopsis;
     ImageView foto;
+    Button leerTexto;
+    private TtsManager ttsManager = null;
+    private int stopTtsManager = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +48,7 @@ public class TemporadaDetallada extends AppCompatActivity {
         sinopsis.setMovementMethod(new ScrollingMovementMethod());
         foto = findViewById(R.id.ivPoster);
         miLista = new ArrayList<Episodio>();//Lista de objetos
+        leerTexto = findViewById(R.id.buttonLeer);
         //miLista=cargarDatos(miLista);//Cargamos los datos del array
         miRecycler = (RecyclerView) findViewById(R.id.miRecylerVistaEpisodios);
         //Pasos importantes
@@ -70,12 +64,20 @@ public class TemporadaDetallada extends AppCompatActivity {
         });
         miRecycler.setAdapter(elAdaptador);
 
+        leerTexto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readingDescription();
+            }
+        });
 
-        ComponenteWS ws = null;
+
+
+        ComponenteCAD ws = null;
         Temporada temporada = new Temporada();
         try {
-            ws = new ComponenteWS();
-            temporada = ws.leerTemporada(codigoSerieElegida,numeroTemporadaElegida);
+            cad = new ComponenteCAD(this);
+            temporada = cad.leerTemporada(codigoSerieElegida,numeroTemporadaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
@@ -90,8 +92,8 @@ public class TemporadaDetallada extends AppCompatActivity {
 
         ArrayList<Episodio> aux  = new ArrayList<>();
         try {
-            ws = new ComponenteWS();
-            aux = ws.leerEpisodios(codigoSerieElegida,numeroTemporadaElegida);
+            cad = new ComponenteCAD(this);
+            aux = cad.leerEpisodios(codigoSerieElegida,numeroTemporadaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }
@@ -100,6 +102,37 @@ public class TemporadaDetallada extends AppCompatActivity {
             elAdaptador.notifyItemChanged(i);
         }
 
+        checkDescription();
     }
 
+    private void checkDescription() {
+        if (!sinopsis.getText().toString().isEmpty()) {
+            ttsManager = new TtsManager();
+            ttsManager.init(this);
+            leerTexto.setVisibility(View.VISIBLE);
+        } else {
+            leerTexto.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void readingDescription() {
+        switch (stopTtsManager) {
+            case 0:
+                stopTtsManager = 1;
+                ttsManager.initQueue(sinopsis.getText().toString());
+                break;
+            case 1:
+                stopTtsManager = 0;
+                ttsManager.stop();
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ttsManager != null) {
+            ttsManager.shutDown();
+        }
+    }
 }

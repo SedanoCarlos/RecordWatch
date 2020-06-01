@@ -1,9 +1,8 @@
-package com.recordwatch.recordwatch;
+package com.recordwatch.recordwatch.adaptadores;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,12 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Episodio;
+import com.recordwatch.recordwatch.ExcepcionRecordWatch;
+import com.recordwatch.recordwatch.R;
+import com.recordwatch.recordwatch.pojos.Serie;
+
 
 import java.util.ArrayList;
 
@@ -97,8 +99,8 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
             Glide.with(mContext).load(poster).into(foto);
             Episodio aux = new Episodio();
             try {
-                ComponenteBD bd = new ComponenteBD(mContext);
-                aux = bd.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, getAdapterPosition());
+                ComponenteCAD cad = new ComponenteCAD(mContext);
+                aux = cad.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, getAdapterPosition());
             } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
             }
@@ -115,31 +117,31 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
         public void cambiarEstado(int position) {
             Episodio aux = new Episodio();
-            ComponenteBD bd = null;
+            ComponenteCAD cad = null;
             try {
-                bd = new ComponenteBD(mContext);
-                if (bd.leerSerie(codigoSerieElegida) != null) {
-                    aux = bd.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
+                cad = new ComponenteCAD(mContext);
+                if (cad.leerSerieBD(codigoSerieElegida) != null) {
+                    aux = cad.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
                     Episodio episodio = new Episodio();
                     if (aux == null) {
                         episodio.setSerieId(codigoSerieElegida);
                         episodio.setNumeroTemporada(numeroTemporadaElegida);
                         episodio.setNumeroEpisodio(position);
-                        bd.insertarEpisodio(episodio);
+                        cad.insertarEpisodio(episodio);
                         Log.d("EPISODIO INSERTADO", "" + episodio);
                         visto.setBackgroundResource(R.drawable.ojotachado);
                     } else {
-                        bd.eliminarEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
+                        cad.eliminarEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
                         Log.d("EPISODIO ELIMINADO", "Serie:" + codigoSerieElegida + ",Temporada:" + numeroTemporadaElegida + ",Episodio:" + position);
                         visto.setBackgroundResource(R.drawable.ojo);
                     }
 
                     boolean episodiosVistos = true;
-                    ComponenteWS ws = new ComponenteWS();
-                    int numeroTemporadas  = (bd.leerTemporadas(codigoSerieElegida)).size();
+                    ComponenteCAD cad1 = new ComponenteCAD(mContext);
+                    int numeroTemporadas  = (cad.leerTemporadasBD(codigoSerieElegida)).size();
                     for (int i=0;i<numeroTemporadas;i++){
-                        int numeroEpisodiosWS = (ws.leerTemporada(codigoSerieElegida,i)).getNumeroCapitulos();
-                        int numeroEpisodiosBD = (bd.leerEpisodios(codigoSerieElegida,i)).size();
+                        int numeroEpisodiosWS = (cad1.leerTemporada(codigoSerieElegida,i)).getNumeroCapitulos();
+                        int numeroEpisodiosBD = (cad.leerEpisodios(codigoSerieElegida,i)).size();
                         if(numeroEpisodiosWS != numeroEpisodiosBD){
                             episodiosVistos = false;
                             break;
@@ -149,7 +151,7 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
                         Serie serie = new Serie();
                         serie.setSerieId(codigoSerieElegida);
                         serie.setEstado("V");
-                        bd.modificarSerie(codigoSerieElegida,serie);
+                        cad.modificarSerie(codigoSerieElegida,serie);
                     }
                 }else{
                     Toast.makeText(mContext,"Primero indica la serie como Pendiente o Siguiendo",Toast.LENGTH_LONG).show();

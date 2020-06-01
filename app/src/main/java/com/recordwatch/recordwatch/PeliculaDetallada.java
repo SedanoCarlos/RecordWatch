@@ -2,9 +2,6 @@ package com.recordwatch.recordwatch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.text.method.ScrollingMovementMethod;
@@ -17,25 +14,16 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Pelicula;
 
-import java.util.Locale;
 
 import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 
 
-public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech.OnInitListener{
+public class PeliculaDetallada extends AppCompatActivity{
 
     TextView titulo;
     TextView valoracion;
@@ -43,7 +31,8 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
     ImageView foto;
     Button peliculaRegistrada;
     Button leerTexto;
-    TextToSpeech hablar;
+    private TtsManager ttsManager = null;
+    private int stopTtsManager = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +48,13 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
         foto = findViewById(R.id.ivPoster);
         peliculaRegistrada = findViewById(R.id.buttonPeliculaRegistrada);
         leerTexto = findViewById(R.id.buttonLeer);
-        hablar = new TextToSpeech(this,this);
+
+        leerTexto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readingDescription();
+            }
+        });
 
         peliculaRegistrada.setOnClickListener(new View.OnClickListener() {
 
@@ -83,19 +78,11 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
             }
         });
 
-        leerTexto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                speakOut();
-            }
-
-
-        });
 
         Pelicula pelicula = new Pelicula();
         try {
-            ComponenteBD bd = new ComponenteBD(this);
-            pelicula = bd.leerPelicula(codigoPeliculaElegida);
+            ComponenteCAD cad = new ComponenteCAD(this);
+            pelicula = cad.leerPeliculaBD(codigoPeliculaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
@@ -105,11 +92,10 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
             peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
         }
 
-        ComponenteWS ws = null;
         pelicula = new Pelicula();
         try {
-            ws = new ComponenteWS();
-            pelicula = ws.leerPelicula(codigoPeliculaElegida);
+            ComponenteCAD cad2 = new ComponenteCAD(this);
+            pelicula = cad2.leerPeliculaWS(codigoPeliculaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
@@ -123,29 +109,31 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
         } else {
             Glide.with(PeliculaDetallada.this).load(poster).placeholder(R.drawable.pelicula).into(foto);
         }
+
+        checkDescription();
     }
 
 
     public void cambiarEstado(MenuItem item) {
         Pelicula aux = new Pelicula();
-        ComponenteBD bd = null;
+        ComponenteCAD cad = null;
         try {
-            bd = new ComponenteBD(this);
-            aux = bd.leerPelicula(codigoPeliculaElegida);
+            cad = new ComponenteCAD(this);
+            aux = cad.leerPeliculaBD(codigoPeliculaElegida);
             Pelicula pelicula = new Pelicula();
             if (aux == null) {
                 pelicula.setPeliculaId(codigoPeliculaElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     pelicula.setEstado("P");
-                    bd.insertarPelicula(pelicula);
+                    cad.insertarPelicula(pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.pendiente));
                 } else if (item.getTitle().equals("Marcar como favorita")) {
                     pelicula.setEstado("F");
-                    bd.insertarPelicula(pelicula);
+                    cad.insertarPelicula(pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.ic_favorite_black_24dp));
                 } else if (item.getTitle().equals("Marcar como vista")) {
                     pelicula.setEstado("V");
-                    bd.insertarPelicula(pelicula);
+                    cad.insertarPelicula(pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
                 } else if (item.getTitle().equals("Sin Clasificar")) {
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
@@ -154,18 +142,18 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
                 pelicula.setPeliculaId(codigoPeliculaElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     pelicula.setEstado("P");
-                    bd.modificarPelicula(codigoPeliculaElegida,pelicula);
+                    cad.modificarPelicula(codigoPeliculaElegida,pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.pendiente));
                 } else if (item.getTitle().equals("Marcar como favorita")) {
                     pelicula.setEstado("F");
-                    bd.modificarPelicula(codigoPeliculaElegida,pelicula);
+                    cad.modificarPelicula(codigoPeliculaElegida,pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.ic_favorite_black_24dp));
                 } else if (item.getTitle().equals("Marcar como vista")) {
                     pelicula.setEstado("V");
-                    bd.modificarPelicula(codigoPeliculaElegida,pelicula);
+                    cad.modificarPelicula(codigoPeliculaElegida,pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
                 } else if (item.getTitle().equals("Sin Clasificar")) {
-                    bd.eliminarPelicula(codigoPeliculaElegida);
+                    cad.eliminarPelicula(codigoPeliculaElegida);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }
             }
@@ -178,8 +166,8 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
     public void comprobarEstado() {
         Pelicula pelicula = new Pelicula();
         try {
-            ComponenteBD bd = new ComponenteBD(this);
-            pelicula = bd.leerPelicula(codigoPeliculaElegida);
+            ComponenteCAD cad = new ComponenteCAD(this);
+            pelicula = cad.leerPeliculaBD(codigoPeliculaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
@@ -194,22 +182,34 @@ public class PeliculaDetallada extends AppCompatActivity implements TextToSpeech
 
     }
 
-    @Override
-    public void onInit(int status) {
-        if(status==TextToSpeech.SUCCESS){
-            int result = hablar.setLanguage(Locale.getDefault());
-            if(result==TextToSpeech.LANG_NOT_SUPPORTED || result==TextToSpeech.LANG_MISSING_DATA){
-                Log.e("Lectura en voz","Este lenguaje no es soportado");
-            }else{
-                leerTexto.setEnabled(true);
-            }
-        }else{
-            Log.e("Lectura en voz","Inicialización del lenguaje es fallida");
+    private void checkDescription() {
+        if (!sinopsis.getText().toString().isEmpty()) {
+            ttsManager = new TtsManager();
+            ttsManager.init(this);
+            leerTexto.setVisibility(View.VISIBLE);
+        } else {
+            leerTexto.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void speakOut() {
-        String texto = sinopsis.getText().toString();
-        hablar.speak(texto,TextToSpeech.QUEUE_FLUSH,null);
+    public void readingDescription() {
+        switch (stopTtsManager) {
+            case 0:
+                stopTtsManager = 1;
+                ttsManager.initQueue(sinopsis.getText().toString());
+                break;
+            case 1:
+                stopTtsManager = 0;
+                ttsManager.stop();
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ttsManager != null) {
+            ttsManager.shutDown();
+        }
     }
 }

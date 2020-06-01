@@ -18,7 +18,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
+import com.recordwatch.recordwatch.adaptadores.AdaptadorTemporadas;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Temporada;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -111,8 +113,8 @@ public class TemporadasActivity extends AppCompatActivity {
 
         ArrayList<Temporada> aux = new ArrayList<>();
         try {
-            ComponenteWS ws = new ComponenteWS();
-            aux = ws.leerTemporadas(codigoSerieElegida);
+            ComponenteCAD cad = new ComponenteCAD(this);
+            aux = cad.leerTemporadasWS(codigoSerieElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }

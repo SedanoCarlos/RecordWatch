@@ -6,16 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.hash.sha;
+import com.recordwatch.recordwatch.pojos.Usuario;
 
 import java.math.BigInteger;
 
@@ -67,8 +66,8 @@ public class IniciarSesion extends AppCompatActivity {
             Toast.makeText(this, "Escribe tu contraseña", Toast.LENGTH_SHORT).show();
         }else{
             try {
-                ComponenteBD bd = new ComponenteBD(this);
-                usuario = bd.leerUsuario(passwordConvertHash().toString(16));
+                ComponenteCAD cad = new ComponenteCAD(this);
+                usuario = cad.leerUsuario(passwordConvertHash().toString(16));
             } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             }
             if (usuario != null) {

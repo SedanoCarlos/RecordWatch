@@ -15,8 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
+import com.recordwatch.recordwatch.adaptadores.AdaptadorPeliculas;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Pelicula;
 
 import java.util.ArrayList;
 
@@ -80,8 +81,8 @@ public class PeliculasActivity extends AppCompatActivity {
 
         ArrayList<Pelicula> aux = new ArrayList<>();
         try {
-            ComponenteWS ws = new ComponenteWS();
-            aux = ws.leerPeliculasPopulares();
+            ComponenteCAD cad = new ComponenteCAD(this);
+            aux = cad.leerPeliculasPopulares();
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }

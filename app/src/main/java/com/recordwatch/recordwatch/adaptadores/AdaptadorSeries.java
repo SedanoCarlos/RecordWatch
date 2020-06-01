@@ -1,4 +1,4 @@
-package com.recordwatch.recordwatch;
+package com.recordwatch.recordwatch.adaptadores;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
+import com.recordwatch.recordwatch.ExcepcionRecordWatch;
+import com.recordwatch.recordwatch.R;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Serie;
 
 import java.util.ArrayList;
 
@@ -82,8 +85,8 @@ public class AdaptadorSeries extends RecyclerView.Adapter<AdaptadorSeries.ViewHo
                     (mContext.getClass().getSimpleName().equals("BuscarSerie"))) {
                 try {
                     Serie aux = new Serie();
-                    ComponenteBD bd = new ComponenteBD(mContext);
-                    aux = bd.leerSerie(serie.getSerieId());
+                    ComponenteCAD cad = new ComponenteCAD(mContext);
+                    aux = cad.leerSerieBD(serie.getSerieId());
                     if (aux != null) {
                         estado.setVisibility(View.VISIBLE);
                         if (aux.getEstado().equals("S")) {

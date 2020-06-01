@@ -1,4 +1,4 @@
-package com.recordwatch.recordwatch;
+package com.recordwatch.recordwatch.pojos;
 
 public class Serie {
 

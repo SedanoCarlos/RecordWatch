@@ -7,28 +7,19 @@ package com.recordwatch.recordwatch.componentes;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.recordwatch.recordwatch.AdminSQLite;
-import com.recordwatch.recordwatch.Episodio;
+import com.recordwatch.recordwatch.pojos.Episodio;
 import com.recordwatch.recordwatch.ExcepcionRecordWatch;
-import com.recordwatch.recordwatch.IniciarSesion;
-import com.recordwatch.recordwatch.MainActivity;
-import com.recordwatch.recordwatch.Pelicula;
-import com.recordwatch.recordwatch.R;
-import com.recordwatch.recordwatch.Serie;
-import com.recordwatch.recordwatch.Temporada;
-import com.recordwatch.recordwatch.Usuario;
+import com.recordwatch.recordwatch.pojos.Pelicula;
+import com.recordwatch.recordwatch.pojos.Serie;
+import com.recordwatch.recordwatch.pojos.Temporada;
+import com.recordwatch.recordwatch.pojos.Usuario;
 
 
 import java.util.ArrayList;
-
-import static com.recordwatch.recordwatch.IniciarSesion.saveValuePreference;
-import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 
 /**
  * @author Carlos
@@ -58,9 +49,12 @@ public class ComponenteBD {
         return registrosAfectados;
     }
 
-//    public Integer eliminarUsuario(Integer contrasena) throws ExcepcionRecordWatch {
-//        return 0;
-//    }
+    public Integer eliminarUsuario(String contraseña) throws ExcepcionRecordWatch {
+        conectarBD();
+        int registrosEliminados = rw.delete("usuario", "contrasena=" + "'" + contraseña + "'" , null);
+        desconectarBD();
+        return registrosEliminados;
+    }
 
     public long modificarUsuario(Usuario usuarioViejo, Usuario usuarioNuevo) throws ExcepcionRecordWatch {
         conectarBD();
@@ -74,6 +68,21 @@ public class ComponenteBD {
     public Usuario leerUsuario(String contraseña) throws ExcepcionRecordWatch {
         conectarBD();
         Cursor buscar = rw.rawQuery("select contrasena from usuario where contrasena=" + "'" + contraseña + "'", null);
+        buscar.moveToFirst();
+        if (buscar.moveToFirst()) {
+            Usuario usuario = new Usuario();
+            usuario.setContrasena(buscar.getString(0));
+            desconectarBD();
+            return usuario;
+        }
+        desconectarBD();
+        return null;
+
+    }
+
+    public Usuario leerUsuarios() throws ExcepcionRecordWatch {
+        conectarBD();
+        Cursor buscar = rw.rawQuery("select contrasena from usuario", null);
         buscar.moveToFirst();
         if (buscar.moveToFirst()) {
             Usuario usuario = new Usuario();
@@ -223,13 +232,13 @@ public class ComponenteBD {
         return registrosEliminados;
     }
 
-    public int modificarTemporada(Integer serieId, int numeroTemporada, Temporada t) throws ExcepcionRecordWatch {
-        return 0;
-    }
+//    public int modificarTemporada(Integer serieId, int numeroTemporada, Temporada t) throws ExcepcionRecordWatch {
+//        return 0;
+//    }
 
-    public Temporada leerTemporada(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
-        return null;
-    }
+//    public Temporada leerTemporada(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
+//        return null;
+//    }
 
     public ArrayList<Temporada> leerTemporadas(Integer serieId) throws ExcepcionRecordWatch {
         ArrayList<Temporada> miLista = new ArrayList<>();
@@ -273,9 +282,9 @@ public class ComponenteBD {
         return registrosEliminados;
     }
 
-    public int modificarEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio, Episodio e) throws ExcepcionRecordWatch {
-        return 0;
-    }
+//    public int modificarEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio, Episodio e) throws ExcepcionRecordWatch {
+//        return 0;
+//    }
 
     public Episodio leerEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio) throws ExcepcionRecordWatch {
         conectarBD();

@@ -15,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
+import com.recordwatch.recordwatch.adaptadores.AdaptadorSeries;
+import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.pojos.Serie;
 
 import java.util.ArrayList;
 
@@ -27,7 +29,7 @@ public class SeriesActivity extends AppCompatActivity {
     TextView nombreSerie;
     TextView valoracionSerie;
     static ImageView fotoSerie;
-    static  int codigoSerieElegida;
+    public static  int codigoSerieElegida;
     SwipeRefreshLayout refrescar;
 
 
@@ -80,8 +82,8 @@ public class SeriesActivity extends AppCompatActivity {
 
         ArrayList<Serie> aux  = new ArrayList<>();
         try {
-            ComponenteWS ws = new ComponenteWS();
-            aux = ws.leerSeriesPopulares();
+            ComponenteCAD cad = new ComponenteCAD(this);
+            aux = cad.leerSeriesPopulares();
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }

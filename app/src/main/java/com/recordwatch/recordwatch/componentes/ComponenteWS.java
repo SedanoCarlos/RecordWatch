@@ -8,7 +8,7 @@ package com.recordwatch.recordwatch.componentes;
 
 import com.recordwatch.recordwatch.pojos.Episodio;
 import com.recordwatch.recordwatch.ExcepcionRecordWatch;
-import com.recordwatch.recordwatch.JSONTask;
+import com.recordwatch.recordwatch.utilidades.JSONTask;
 import com.recordwatch.recordwatch.pojos.Pelicula;
 import com.recordwatch.recordwatch.pojos.Serie;
 import com.recordwatch.recordwatch.pojos.Temporada;
@@ -25,17 +25,32 @@ import static com.recordwatch.recordwatch.TemporadasActivity.primeraTemporada;
 
 
 /**
+ * En esta clase se gestionan todas las operaciones de leer un registro y leer todos los registros del
+ * api de TheMovieDB.
+ *
  * @author Carlos
  */
 public class ComponenteWS {
 
     public static String url;
 
+    /**
+     * Método constructor.
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     */
     public ComponenteWS() throws ExcepcionRecordWatch {
 
     }
 
-
+    /**
+     * Este método permite leer un registro de la lista de películas del api.
+     *
+     * @param peliculaId id de la pelicula del cual se
+     * van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Pelicula leerPelicula(Integer peliculaId) throws ExcepcionRecordWatch {
         url = "https://api.themoviedb.org/3/movie/" + peliculaId + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         String response = null;
@@ -70,45 +85,13 @@ public class ComponenteWS {
         return pelicula;
     }
 
-
-    public ArrayList<Pelicula> buscarPelicula(String tituloPelicula) throws ExcepcionRecordWatch {
-        ArrayList<Pelicula> miLista = new ArrayList<>();
-        url = "https://api.themoviedb.org/3/search/movie?api_key=2f6c71bda35c7c12888918e27e405df2&query=" + tituloPelicula + "&page=1&include_adult=false&language=es-ES";
-        String response = null;
-        try {
-            response = new JSONTask().execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < 100; i++) {
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                Pelicula pelicula = new Pelicula();
-                JSONArray array = (JSONArray) jsonObject.get("results"); // it should be any array name
-
-                JSONObject datos = (JSONObject) array.get(i);
-                int codigo = datos.getInt("id");
-                pelicula.setPeliculaId(codigo);
-                String nombre = datos.getString("title");
-                pelicula.setTitulo(nombre);
-                String valoracion = datos.getString("vote_average");
-                pelicula.setValoracion(valoracion);
-                String foto = datos.getString("poster_path");
-                if (foto.equals("null")) {
-                    pelicula.setRutaPoster("");
-                } else {
-                    pelicula.setRutaPoster("https://image.tmdb.org/t/p/w500" + foto);
-                }
-                miLista.add(pelicula);
-            } catch (JSONException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return miLista;
-    }
-
+    /**
+     * Este método permite leer varios registros de la lista de peliculas populares del api.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public ArrayList<Pelicula> leerPeliculasPopulares() throws ExcepcionRecordWatch {
         ArrayList<Pelicula> miLista = new ArrayList<>();
         url = "https://api.themoviedb.org/3/movie/popular?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
@@ -147,7 +130,60 @@ public class ComponenteWS {
         return miLista;
     }
 
+    /**
+     * Este método permite leer varios registros de la lista de peliculas buscadas en la api.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
+    public ArrayList<Pelicula> buscarPelicula(String tituloPelicula) throws ExcepcionRecordWatch {
+        ArrayList<Pelicula> miLista = new ArrayList<>();
+        url = "https://api.themoviedb.org/3/search/movie?api_key=2f6c71bda35c7c12888918e27e405df2&query=" + tituloPelicula + "&page=1&include_adult=false&language=es-ES";
+        String response = null;
+        try {
+            response = new JSONTask().execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < 100; i++) {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                Pelicula pelicula = new Pelicula();
+                JSONArray array = (JSONArray) jsonObject.get("results"); // it should be any array name
 
+                JSONObject datos = (JSONObject) array.get(i);
+                int codigo = datos.getInt("id");
+                pelicula.setPeliculaId(codigo);
+                String nombre = datos.getString("title");
+                pelicula.setTitulo(nombre);
+                String valoracion = datos.getString("vote_average");
+                pelicula.setValoracion(valoracion);
+                String foto = datos.getString("poster_path");
+                if (foto.equals("null")) {
+                    pelicula.setRutaPoster("");
+                } else {
+                    pelicula.setRutaPoster("https://image.tmdb.org/t/p/w500" + foto);
+                }
+                miLista.add(pelicula);
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return miLista;
+    }
+
+    /**
+     * Este método permite leer un registro de la lista de series del api.
+     *
+     * @param serieId id de la serie del cual se
+     * van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Serie leerSerie(Integer serieId) throws ExcepcionRecordWatch {
         url = "https://api.themoviedb.org/3/tv/" + serieId + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         String response = null;
@@ -182,48 +218,13 @@ public class ComponenteWS {
         return serie;
     }
 
-    public ArrayList<Serie> leerSeries() throws ExcepcionRecordWatch {
-        return null;
-    }
-
-    public ArrayList<Serie> buscarSerie(String tituloSerie) throws ExcepcionRecordWatch {
-        ArrayList<Serie> miLista = new ArrayList<>();
-        url = "https://api.themoviedb.org/3/search/tv?api_key=2f6c71bda35c7c12888918e27e405df2&query=" + tituloSerie + "&page=1&include_adult=false&language=es-ES";
-        String response = null;
-        try {
-            response = new JSONTask().execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < 100; i++) {
-            try {
-                JSONObject jsonObject = new JSONObject(response);
-                Serie serie = new Serie();
-                JSONArray array = (JSONArray) jsonObject.get("results"); // it should be any array name
-
-                JSONObject datos = (JSONObject) array.get(i);
-                int codigo = datos.getInt("id");
-                serie.setSerieId(codigo);
-                String nombre = datos.getString("name");
-                serie.setTitulo(nombre);
-                String valoracion = datos.getString("vote_average");
-                serie.setValoracion(valoracion);
-                String foto = datos.getString("poster_path");
-                if (foto.equals("null")) {
-                    serie.setRutaPoster("");
-                } else {
-                    serie.setRutaPoster("https://image.tmdb.org/t/p/w500" + foto);
-                }
-                miLista.add(serie);
-            } catch (JSONException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return miLista;
-    }
-
+    /**
+     * Este método permite leer varios registros de la lista de series populares del api.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public ArrayList<Serie> leerSeriesPopulares() throws ExcepcionRecordWatch {
         ArrayList<Serie> miLista = new ArrayList<>();
         url = "https://api.themoviedb.org/3/tv/popular?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
@@ -262,7 +263,60 @@ public class ComponenteWS {
         return miLista;
     }
 
+    /**
+     * Este método permite leer varios registros de la lista de series buscadas en la api.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
+    public ArrayList<Serie> buscarSerie(String tituloSerie) throws ExcepcionRecordWatch {
+        ArrayList<Serie> miLista = new ArrayList<>();
+        url = "https://api.themoviedb.org/3/search/tv?api_key=2f6c71bda35c7c12888918e27e405df2&query=" + tituloSerie + "&page=1&include_adult=false&language=es-ES";
+        String response = null;
+        try {
+            response = new JSONTask().execute().get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < 100; i++) {
+            try {
+                JSONObject jsonObject = new JSONObject(response);
+                Serie serie = new Serie();
+                JSONArray array = (JSONArray) jsonObject.get("results"); // it should be any array name
 
+                JSONObject datos = (JSONObject) array.get(i);
+                int codigo = datos.getInt("id");
+                serie.setSerieId(codigo);
+                String nombre = datos.getString("name");
+                serie.setTitulo(nombre);
+                String valoracion = datos.getString("vote_average");
+                serie.setValoracion(valoracion);
+                String foto = datos.getString("poster_path");
+                if (foto.equals("null")) {
+                    serie.setRutaPoster("");
+                } else {
+                    serie.setRutaPoster("https://image.tmdb.org/t/p/w500" + foto);
+                }
+                miLista.add(serie);
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return miLista;
+    }
+
+    /**
+     * Este método permite leer un registro de la lista de temporadas del api.
+     *
+     * @param serieId id de la serie de la temporada del cual se van a leer los datos
+     * @param numeroTemporada numero de la temporada del cual se van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Temporada leerTemporada(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
         url = "https://api.themoviedb.org/3/tv/" + serieId + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         String response = null;
@@ -292,7 +346,14 @@ public class ComponenteWS {
         return temporada;
     }
 
-
+    /**
+     * Este método permite leer varios registros de la lista de temporadas del api.
+     *
+     * @param serieId id de la serie de las temporadas del cual se van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public ArrayList<Temporada> leerTemporadas(Integer serieId) throws ExcepcionRecordWatch {
         ArrayList<Temporada> miLista = new ArrayList<>();
         url = "https://api.themoviedb.org/3/tv/" + serieId + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
@@ -338,11 +399,15 @@ public class ComponenteWS {
         return miLista;
     }
 
-
-    public Episodio leerEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio) throws ExcepcionRecordWatch {
-        return null;
-    }
-
+    /**
+     * Este método permite leer varios registros de la lista de episodios del api.
+     *
+     * @param serieId id de la serie de los episodios del cual se van a leer los datos
+     * @param numeroTemporada numero de la temporada de los episodios del cual se van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public ArrayList<Episodio> leerEpisodios(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
         ArrayList<Episodio> miLista = new ArrayList<>();
         if (primeraTemporada == 0) {

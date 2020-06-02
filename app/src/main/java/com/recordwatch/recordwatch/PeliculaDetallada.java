@@ -1,11 +1,8 @@
 package com.recordwatch.recordwatch;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,17 +10,18 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.pojos.Pelicula;
-
+import com.recordwatch.recordwatch.utilidades.TtsManager;
 
 import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 
-
-public class PeliculaDetallada extends AppCompatActivity{
+/**
+ * Activity que nos muestra la información de una película en detalle
+ */
+public class PeliculaDetallada extends AppCompatActivity {
 
     TextView titulo;
     TextView valoracion;
@@ -31,15 +29,19 @@ public class PeliculaDetallada extends AppCompatActivity{
     ImageView foto;
     Button peliculaRegistrada;
     Button leerTexto;
-    private TtsManager ttsManager = null;
-    private int stopTtsManager = 0;
+    private TtsManager lecturaVoz = null;
+    private int hablando = 0;
 
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pelicula_detallada);
         this.setTitle(R.string.peliculaDetallada);
-
 
         titulo = findViewById(R.id.tvTitulo);
         valoracion = findViewById(R.id.tvValoracion);
@@ -52,20 +54,15 @@ public class PeliculaDetallada extends AppCompatActivity{
         leerTexto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                readingDescription();
+                leerSinopis();
             }
         });
-
         peliculaRegistrada.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                //Creating the instance of PopupMenu
                 PopupMenu popup = new PopupMenu(PeliculaDetallada.this, peliculaRegistrada);
-                //Inflating the Popup using xml file
                 popup.getMenuInflater().inflate(R.menu.popup_peliculas, popup.getMenu());
-
-                //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         cambiarEstado(item);
@@ -74,11 +71,10 @@ public class PeliculaDetallada extends AppCompatActivity{
                     }
                 });
 
-                popup.show();//showing popup menu
+                popup.show();
             }
         });
-
-
+        //Comprueba si la pelicula existe en la base de datos
         Pelicula pelicula = new Pelicula();
         try {
             ComponenteCAD cad = new ComponenteCAD(this);
@@ -86,20 +82,22 @@ public class PeliculaDetallada extends AppCompatActivity{
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
+        //Depende de si existe o no,muestra un estado diferente
         if (pelicula != null) {
             comprobarEstado();
         } else {
             peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
         }
 
+
         pelicula = new Pelicula();
         try {
             ComponenteCAD cad2 = new ComponenteCAD(this);
+            //Busca la información de la pelicula en la api de TheMovieDB y muestra su información en los campos
             pelicula = cad2.leerPeliculaWS(codigoPeliculaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
-
         titulo.setText(pelicula.getTitulo());
         valoracion.setText(pelicula.getValoracion());
         sinopsis.setText(pelicula.getSinopsis());
@@ -110,18 +108,24 @@ public class PeliculaDetallada extends AppCompatActivity{
             Glide.with(PeliculaDetallada.this).load(poster).placeholder(R.drawable.pelicula).into(foto);
         }
 
-        checkDescription();
+        comprobarSinopsis();
     }
 
-
+    /**
+     * Método que cambia el estado de la película según que opción del menu se marque
+     * @param item elemento del menú seleccionado
+     */
     public void cambiarEstado(MenuItem item) {
         Pelicula aux = new Pelicula();
         ComponenteCAD cad = null;
         try {
+            //Comprueba si la pelicula existe en la base de datos
             cad = new ComponenteCAD(this);
             aux = cad.leerPeliculaBD(codigoPeliculaElegida);
             Pelicula pelicula = new Pelicula();
             if (aux == null) {
+                /**Si no existe,inserta la película en la base de datos con el estado correspondiente al que se
+                haya seleccionado en el menú y cambia el icono que se muestra de la película**/
                 pelicula.setPeliculaId(codigoPeliculaElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     pelicula.setEstado("P");
@@ -138,19 +142,21 @@ public class PeliculaDetallada extends AppCompatActivity{
                 } else if (item.getTitle().equals("Sin Clasificar")) {
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }
-            }else{
+            } else {
+                /**Si existe,modifica la película en la base de datos con el estado correspondiente al que se
+                 haya seleccionado en el menú y cambia el icono que se muestra de la película**/
                 pelicula.setPeliculaId(codigoPeliculaElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     pelicula.setEstado("P");
-                    cad.modificarPelicula(codigoPeliculaElegida,pelicula);
+                    cad.modificarPelicula(codigoPeliculaElegida, pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.pendiente));
                 } else if (item.getTitle().equals("Marcar como favorita")) {
                     pelicula.setEstado("F");
-                    cad.modificarPelicula(codigoPeliculaElegida,pelicula);
+                    cad.modificarPelicula(codigoPeliculaElegida, pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.ic_favorite_black_24dp));
                 } else if (item.getTitle().equals("Marcar como vista")) {
                     pelicula.setEstado("V");
-                    cad.modificarPelicula(codigoPeliculaElegida,pelicula);
+                    cad.modificarPelicula(codigoPeliculaElegida, pelicula);
                     peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
                 } else if (item.getTitle().equals("Sin Clasificar")) {
                     cad.eliminarPelicula(codigoPeliculaElegida);
@@ -160,17 +166,22 @@ public class PeliculaDetallada extends AppCompatActivity{
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }
-
     }
 
+    /**
+     * Método que comprueba el estado de la películas,para saber que icono mostrar
+     */
     public void comprobarEstado() {
         Pelicula pelicula = new Pelicula();
         try {
+            //Comprueba si la pelicula existe en la base de datos
             ComponenteCAD cad = new ComponenteCAD(this);
             pelicula = cad.leerPeliculaBD(codigoPeliculaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
 
         }
+
+        //Si la pelicula existe en la base de datos,muestra su estado en función del que tenga almacenado en la base de datos
         if (pelicula.getEstado().equals("P")) {
             peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.pendiente));
         } else if (pelicula.getEstado().equals("F")) {
@@ -178,38 +189,46 @@ public class PeliculaDetallada extends AppCompatActivity{
         } else if (pelicula.getEstado().equals("V")) {
             peliculaRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
         }
-
-
     }
 
-    private void checkDescription() {
+    /**
+     * Método que comprueba si hay sinopsis de la pelicula
+     */
+    private void comprobarSinopsis() {
+        //Si existe sinopsis para la pelicula, el botón de lectura en voz se mostrará,de lo contrario se ocultará
         if (!sinopsis.getText().toString().isEmpty()) {
-            ttsManager = new TtsManager();
-            ttsManager.init(this);
+            lecturaVoz = new TtsManager();
+            lecturaVoz.init(this);
             leerTexto.setVisibility(View.VISIBLE);
         } else {
             leerTexto.setVisibility(View.INVISIBLE);
         }
     }
 
-    public void readingDescription() {
-        switch (stopTtsManager) {
+    /**
+     * Método que comprueba si la lectura en voz todavía se esta reproduciendo
+     */
+    public void leerSinopis() {
+        switch (hablando) {
             case 0:
-                stopTtsManager = 1;
-                ttsManager.initQueue(sinopsis.getText().toString());
+                hablando = 1;
+                lecturaVoz.initQueue(sinopsis.getText().toString());
                 break;
             case 1:
-                stopTtsManager = 0;
-                ttsManager.stop();
+                hablando = 0;
+                lecturaVoz.stop();
                 break;
         }
     }
 
+    /**
+     * Método que corta la reproducción de la lectura en voz en caso de que se salga de la actividad
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (ttsManager != null) {
-            ttsManager.shutDown();
+        if (lecturaVoz != null) {
+            lecturaVoz.shutDown();
         }
     }
 }

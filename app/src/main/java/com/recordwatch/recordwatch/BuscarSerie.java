@@ -14,24 +14,26 @@ import android.widget.Toast;
 
 import com.recordwatch.recordwatch.adaptadores.AdaptadorSeries;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
 import com.recordwatch.recordwatch.pojos.Serie;
 
 import java.util.ArrayList;
 
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 
-
+/**
+ * En esta activity muestra un listado de series cuyo titulo tiene relación con el que el usuario introduzca
+ */
 public class BuscarSerie extends AppCompatActivity {
-    ArrayList<Serie> miLista;
-    RecyclerView miRecycler;
-    AdaptadorSeries elAdaptador;
     EditText tituloSerie;
     TextView nombreSerie;
     TextView valoracionSerie;
     static ImageView fotoSerie;
 
-
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,18 +47,20 @@ public class BuscarSerie extends AppCompatActivity {
 
     }
 
-    public void buscarSerie(View view){
-        ArrayList<Serie> aux  = new ArrayList<>();
-        final ArrayList<Serie> miLista = new ArrayList<Serie>();//Lista de objetos
-        //miLista=cargarDatos(miLista);//Cargamos los datos del array
+    /**
+     * Método que muestra una lista de elementos de tipo de serie dentro dentro de una lista
+     *
+     * @param view de tipo View usada para la representación en pantalla de los elementos pertenecientes a la activity
+     */
+    public void buscarSerie(View view) {
+        ArrayList<Serie> aux = new ArrayList<>();
+        final ArrayList<Serie> miLista = new ArrayList<Serie>();
         final RecyclerView miRecycler = (RecyclerView) findViewById(R.id.miRecyclerVistaSeries);
-        //Pasos importantes
         miRecycler.setLayoutManager(new LinearLayoutManager(this));
-        final AdaptadorSeries elAdaptador = new AdaptadorSeries(this,miLista);
+        final AdaptadorSeries elAdaptador = new AdaptadorSeries(this, miLista);
         elAdaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Sacamos el nombre del elemento seleccionado
                 CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTitulo();
                 codigoSerieElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getSerieId();
                 Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
@@ -79,17 +83,19 @@ public class BuscarSerie extends AppCompatActivity {
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }
-        for(int i=0;i<aux.size();i++){
+        for (int i = 0; i < aux.size(); i++) {
             miLista.add(aux.get(i));
             elAdaptador.notifyItemChanged(i);
         }
     }
 
+    /**
+     * Método que hace que se muestre la pantalla de Serie Detallada
+     */
     private void mostrarSerie() {
-        Intent i = new Intent(this,SerieDetallada.class);
+        Intent i = new Intent(this, SerieDetallada.class);
         startActivity(i);
     }
-
 
 
 }

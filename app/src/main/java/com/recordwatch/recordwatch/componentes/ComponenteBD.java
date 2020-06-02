@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.recordwatch.recordwatch.AdminSQLite;
+import com.recordwatch.recordwatch.utilidades.AdminSQLite;
 import com.recordwatch.recordwatch.pojos.Episodio;
 import com.recordwatch.recordwatch.ExcepcionRecordWatch;
 import com.recordwatch.recordwatch.pojos.Pelicula;
@@ -22,24 +22,54 @@ import com.recordwatch.recordwatch.pojos.Usuario;
 import java.util.ArrayList;
 
 /**
+ * En esta clase se gestionan todas las operaciones de inserción, borrado,
+ * eliminación, leer un registro y leer todos los registros de todas las tablas
+ * de la base de datos RecordWatch.
+ *
  * @author Carlos
  */
 public class ComponenteBD {
     AdminSQLite admin;
     SQLiteDatabase rw;
 
+    /**
+     * Método constructor.
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * @param context Activity desde la cual se llama a este método
+     */
     public ComponenteBD(Context context) throws ExcepcionRecordWatch {
         admin = new AdminSQLite(context, "RecordWatch", null, 1);
     }
 
+    /**
+     * Método que nos permitirá establecer la conexión una base de datos.
+     *
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema con el driver
+     */
     private void conectarBD() throws ExcepcionRecordWatch {
         rw = admin.getWritableDatabase();
     }
 
+    /**
+     * Método que realizará la desconexión de la base de datos.
+     *
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema con el driver
+     */
     private void desconectarBD() throws ExcepcionRecordWatch {
         rw.close();
     }
 
+    /**
+     * Este método permite insertar un registro en la tabla Usuario.
+     *
+     * @param u Objeto de la clase Usuario que contiene los datos del usuario
+     * a insertar.
+     * @return Cantidad de registros insertados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long insertarUsuario(Usuario u) throws ExcepcionRecordWatch{
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -49,13 +79,17 @@ public class ComponenteBD {
         return registrosAfectados;
     }
 
-    public Integer eliminarUsuario(String contraseña) throws ExcepcionRecordWatch {
-        conectarBD();
-        int registrosEliminados = rw.delete("usuario", "contrasena=" + "'" + contraseña + "'" , null);
-        desconectarBD();
-        return registrosEliminados;
-    }
-
+    /**
+     * Este método permite modificar un registro en la tabla Usuario.
+     *
+     * @param usuarioViejo Objeto de la clase usuario que contiene los datos del usuario
+     * a modificar
+     * @param usuarioNuevo Objeto de la clase empleado que contiene los datos del usuario a
+     * modificar
+     * @return Cantidad de registros modificados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long modificarUsuario(Usuario usuarioViejo, Usuario usuarioNuevo) throws ExcepcionRecordWatch {
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -65,6 +99,30 @@ public class ComponenteBD {
         return registrosModificados;
     }
 
+    /**
+     * Este método permite eliminar un registro en la tabla Usuario.
+     *
+     * @param contraseña String que indica la contraseña del usuario a borrar
+     * @return Cantidad de registros borrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
+    public Integer eliminarUsuario(String contraseña) throws ExcepcionRecordWatch {
+        conectarBD();
+        int registrosEliminados = rw.delete("usuario", "contrasena=" + "'" + contraseña + "'" , null);
+        desconectarBD();
+        return registrosEliminados;
+    }
+
+    /**
+     * Este método permite leer un registro de la tabla Usuario.
+     *
+     * @param contraseña String que indica el la contraseña del usuario del cual se
+     * van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Usuario leerUsuario(String contraseña) throws ExcepcionRecordWatch {
         conectarBD();
         Cursor buscar = rw.rawQuery("select contrasena from usuario where contrasena=" + "'" + contraseña + "'", null);
@@ -80,6 +138,13 @@ public class ComponenteBD {
 
     }
 
+    /**
+     * Este método permite leer todos los registros de la tabla Usuario.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Usuario leerUsuarios() throws ExcepcionRecordWatch {
         conectarBD();
         Cursor buscar = rw.rawQuery("select contrasena from usuario", null);
@@ -95,6 +160,15 @@ public class ComponenteBD {
 
     }
 
+    /**
+     * Este método permite insertar un registro en la tabla Pelicula.
+     *
+     * @param p Objeto de la clase Pelicula que contiene los datos de la pelicula
+     * a insertar.
+     * @return Cantidad de registros insertados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long insertarPelicula(Pelicula p) throws ExcepcionRecordWatch {
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -105,13 +179,17 @@ public class ComponenteBD {
         return registrosAfectados;
     }
 
-    public Integer eliminarPelicula(Integer peliculaId) throws ExcepcionRecordWatch {
-        conectarBD();
-        int registrosEliminados = rw.delete("pelicula_registrada", "pelicula_id=" + peliculaId , null);
-        desconectarBD();
-        return registrosEliminados;
-    }
-
+    /**
+     * Este método permite modificar un registro en la tabla Pelicula.
+     *
+     * @param peliculaId id que indica el id de la pelicula
+     * a modificar
+     * @param p Objeto de la clase pelicula que contiene los datos de la pelicula a
+     * modificar
+     * @return Cantidad de registros modificados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long modificarPelicula(Integer peliculaId, Pelicula p) throws ExcepcionRecordWatch {
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -122,6 +200,30 @@ public class ComponenteBD {
         return registrosModificados;
     }
 
+    /**
+     * Este método permite eliminar un registro en la tabla Pelicula.
+     *
+     * @param peliculaId id que indica el id de la pelicula a borrar
+     * @return Cantidad de registros borrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
+    public Integer eliminarPelicula(Integer peliculaId) throws ExcepcionRecordWatch {
+        conectarBD();
+        int registrosEliminados = rw.delete("pelicula_registrada", "pelicula_id=" + peliculaId , null);
+        desconectarBD();
+        return registrosEliminados;
+    }
+
+    /**
+     * Este método permite leer un registro de la tabla Pelicula.
+     *
+     * @param peliculaId id de la pelicula del cual se
+     * van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Pelicula leerPelicula(Integer peliculaId) throws ExcepcionRecordWatch {
         conectarBD();
         Cursor buscar = rw.rawQuery("select pelicula_id,estado from pelicula_registrada where pelicula_id=" + peliculaId + "", null);
@@ -137,6 +239,13 @@ public class ComponenteBD {
         return null;
     }
 
+    /**
+     * Este método permite leer todos los registros de la tabla Pelicula.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public ArrayList<Pelicula> leerPeliculas(String estado) throws ExcepcionRecordWatch {
         ArrayList<Pelicula> miLista = new ArrayList<>();
         conectarBD();
@@ -153,6 +262,15 @@ public class ComponenteBD {
         return miLista;
     }
 
+    /**
+     * Este método permite insertar un registro en la tabla Serie.
+     *
+     * @param s Objeto de la clase Serie que contiene los datos de la serie
+     * a insertar.
+     * @return Cantidad de registros insertados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long insertarSerie(Serie s) throws ExcepcionRecordWatch {
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -163,13 +281,17 @@ public class ComponenteBD {
         return registrosAfectados;
     }
 
-    public Integer eliminarSerie(Integer serieId) throws ExcepcionRecordWatch {
-        conectarBD();
-        int registrosEliminados = rw.delete("serie_registrada", "serie_id=" + serieId , null);
-        desconectarBD();
-        return registrosEliminados;
-    }
-
+    /**
+     * Este método permite modificar un registro en la tabla Serie.
+     *
+     * @param serieId id que indica el id de la serie
+     * a modificar
+     * @param s Objeto de la clase serie que contiene los datos de la serie a
+     * modificar
+     * @return Cantidad de registros modificados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long modificarSerie(Integer serieId, Serie s) throws ExcepcionRecordWatch {
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -180,6 +302,30 @@ public class ComponenteBD {
         return registrosModificados;
     }
 
+    /**
+     * Este método permite eliminar un registro en la tabla Serie.
+     *
+     * @param serieId id que indica el id de la serie a borrar
+     * @return Cantidad de registros borrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
+    public Integer eliminarSerie(Integer serieId) throws ExcepcionRecordWatch {
+        conectarBD();
+        int registrosEliminados = rw.delete("serie_registrada", "serie_id=" + serieId , null);
+        desconectarBD();
+        return registrosEliminados;
+    }
+
+    /**
+     * Este método permite leer un registro de la tabla Serie.
+     *
+     * @param serieId id de la serie del cual se
+     * van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Serie leerSerie(Integer serieId) throws ExcepcionRecordWatch {
         conectarBD();
         Cursor buscar = rw.rawQuery("select serie_id,estado from serie_registrada where serie_id=" + serieId + "", null);
@@ -195,6 +341,13 @@ public class ComponenteBD {
         return null;
     }
 
+    /**
+     * Este método permite leer varios de los registros de la tabla Serie.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public ArrayList<Serie> leerSeries(String estado) throws ExcepcionRecordWatch {
         ArrayList<Serie> miLista = new ArrayList<>();
         conectarBD();
@@ -211,6 +364,15 @@ public class ComponenteBD {
         return miLista;
     }
 
+    /**
+     * Este método permite insertar un registro en la tabla Temporada.
+     *
+     * @param t Objeto de la clase Temporada que contiene los datos de la temporada
+     * a insertar.
+     * @return Cantidad de registros insertados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long insertarTemporada(Temporada t) throws ExcepcionRecordWatch {
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -221,10 +383,18 @@ public class ComponenteBD {
         return registrosAfectados;
     }
 
-    public Integer eliminarTemporada(Integer serieId, Integer numeroTemporada) throws ExcepcionRecordWatch {
-        return null;
-    }
+//    public Integer eliminarTemporada(Integer serieId, Integer numeroTemporada) throws ExcepcionRecordWatch {
+//        return null;
+//    }
 
+    /**
+     * Este método permite eliminar varios registros en la tabla Temporada.
+     *
+     * @param serieId id que indica el id de la serie de las temporadas a borrar
+     * @return Cantidad de registros borrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Integer eliminarTemporadas(Integer serieId) throws ExcepcionRecordWatch {
         conectarBD();
         int registrosEliminados = rw.delete("temporada", "(serie_id=" + serieId +")" , null);
@@ -240,6 +410,13 @@ public class ComponenteBD {
 //        return null;
 //    }
 
+    /**
+     * Este método permite leer varios de los registros de la tabla Temporada.
+     *
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public ArrayList<Temporada> leerTemporadas(Integer serieId) throws ExcepcionRecordWatch {
         ArrayList<Temporada> miLista = new ArrayList<>();
         conectarBD();
@@ -256,6 +433,15 @@ public class ComponenteBD {
         return miLista;
     }
 
+    /**
+     * Este método permite insertar un registro en la tabla Episodio.
+     *
+     * @param e Objeto de la clase Temporada que contiene los datos del episodio
+     * a insertar.
+     * @return Cantidad de registros insertados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public long insertarEpisodio(Episodio e) throws ExcepcionRecordWatch {
         conectarBD();
         ContentValues registro = new ContentValues();
@@ -268,6 +454,16 @@ public class ComponenteBD {
         return registrosAfectados;
     }
 
+    /**
+     * Este método permite eliminar un registro en la tabla Episodio.
+     *
+     * @param serieId id que indica la serie del episodio a borrar
+     * @param numeroTemporada numero que indica la temporada de los episodios a borrar
+     * @param numeroEpisodio numero que indica el numero del episodio a borrar
+     * @return Cantidad de registros borrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Integer eliminarEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio) throws ExcepcionRecordWatch {
         conectarBD();
         int registrosEliminados = rw.delete("episodio", "(serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +") and (numero_episodio=" + numeroEpisodio +")" , null);
@@ -275,6 +471,14 @@ public class ComponenteBD {
         return registrosEliminados;
     }
 
+    /**
+     * Este método permite eliminar varios registros en la tabla Episodios.
+     *
+     * @param serieId id que indica la serie de los episodios a borrar
+     * @return Cantidad de registros borrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Integer eliminarEpisodios(Integer serieId) throws ExcepcionRecordWatch {
         conectarBD();
         int registrosEliminados = rw.delete("episodio", "(serie_id=" + serieId +")" , null);
@@ -286,6 +490,16 @@ public class ComponenteBD {
 //        return 0;
 //    }
 
+    /**
+     * Este método permite leer varios registros de la tabla Episodios.
+     *
+     * @param serieId id que indica la serie del episodio del cual se van a leer los datos
+     * @param numeroTemporada numero que indica la temporada de los episodios del cual se van a leer los datos
+     * @param numeroEpisodio numero que indica el numero del episodio del cual se van a leer los datos
+     * @return Cantidad de registros mostrados
+     * @throws ExcepcionRecordWatch se lanzará cuando se produzca
+     * algun problema al operar con la base de datos
+     */
     public Episodio leerEpisodio(Integer serieId, int numeroTemporada, int numeroEpisodio) throws ExcepcionRecordWatch {
         conectarBD();
         Cursor buscar = rw.rawQuery("select serie_id,numero_temporada,numero_episodio from episodio where (serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +") and (numero_episodio=" + numeroEpisodio +")", null);
@@ -302,22 +516,22 @@ public class ComponenteBD {
         return null;
     }
 
-    public ArrayList<Episodio> leerEpisodios(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
-        ArrayList<Episodio> miLista = new ArrayList<>();
-        conectarBD();
-        Cursor cursor = rw.rawQuery("select serie_id,numero_temporada,numero_episodio from episodio where (serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +")", null);
-        if(cursor.moveToFirst()) {
-            do {
-                Episodio episodio = new Episodio();
-                episodio.setSerieId(cursor.getInt(0));
-                episodio.setNumeroTemporada(cursor.getInt(1));
-                episodio.setNumeroEpisodio(cursor.getInt(2));
-                miLista.add(episodio);
-            }while(cursor.moveToNext());
-        }
-        desconectarBD();
-        return miLista;
-    }
+//    public ArrayList<Episodio> leerEpisodios(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
+//        ArrayList<Episodio> miLista = new ArrayList<>();
+//        conectarBD();
+//        Cursor cursor = rw.rawQuery("select serie_id,numero_temporada,numero_episodio from episodio where (serie_id=" + serieId +") and (numero_temporada=" + numeroTemporada +")", null);
+//        if(cursor.moveToFirst()) {
+//            do {
+//                Episodio episodio = new Episodio();
+//                episodio.setSerieId(cursor.getInt(0));
+//                episodio.setNumeroTemporada(cursor.getInt(1));
+//                episodio.setNumeroEpisodio(cursor.getInt(2));
+//                miLista.add(episodio);
+//            }while(cursor.moveToNext());
+//        }
+//        desconectarBD();
+//        return miLista;
+//    }
 
 
 }

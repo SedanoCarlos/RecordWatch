@@ -1,49 +1,34 @@
 package com.recordwatch.recordwatch;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-
+/**
+ * Activity que nos permite elegir entre la opción manejo de películas o series
+ */
 public class MainActivity extends AppCompatActivity {
 
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
-
-
+    /**
+     * Método que muestra el menú desplegable en el action bar de la activity
+     * @param menu menu desplegable con opciones
+     * @return objeto de tipo boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -51,48 +36,43 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
+    /**
+     * Método encargado de mostrar una activity en función de la opción del menu elegido
+     * @param item elemento del menú indicado por el usuario
+     * @return objeto de tipo boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        //Depende de la opcion elegida nos lleva a una activity diferente
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.itemCopiaSeguridad) {
-                Intent i = new Intent(this,CopiaSeguridad.class);
-                startActivity(i);
-        }
-        else if(id == R.id.itemCambiarContraseña){
-            Intent i = new Intent(this,CambiarUsuario.class);
+            Intent i = new Intent(this, CopiaSeguridad.class);
+            startActivity(i);
+        } else if (id == R.id.itemCambiarContraseña) {
+            Intent i = new Intent(this, CambiarUsuario.class);
             startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    public void volver(View view){
-        Intent i = new Intent(this, IniciarSesion.class);
+    /**
+     * Método que muestra la pantalla de peliculas populares
+     * @param view de tipo View usada para la representación en pantalla de los elementos pertenecientes a la activity
+     */
+    public void botonPeliculas(View view) {
+        Intent i = new Intent(this, PeliculasActivity.class);
         startActivity(i);
     }
 
-    public void botonPeliculas(View view){
-        Intent i = new Intent(this,PeliculasActivity.class);
+    /**
+     * Método que muestra la pantalla de series populares
+     * @param view de tipo View usada para la representación en pantalla de los elementos pertenecientes a la activity
+     */
+    public void botonSeries(View view) {
+        Intent i = new Intent(this, SeriesActivity.class);
         startActivity(i);
 
     }
-
-    public void botonSeries(View view){
-        Intent i = new Intent(this,SeriesActivity.class);
-        startActivity(i);
-
-    }
-
-
-
-
 
 
 }

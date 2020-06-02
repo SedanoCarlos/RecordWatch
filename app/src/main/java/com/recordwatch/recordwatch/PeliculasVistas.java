@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,16 +12,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.ArrayList;
 
 import com.recordwatch.recordwatch.adaptadores.AdaptadorPeliculas;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.pojos.Pelicula;
-
-import java.util.ArrayList;
 import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 
-
-
+/**
+ * Activity que muestra el listado de las películas vistas del usuario
+ */
 public class PeliculasVistas extends AppCompatActivity {
     ArrayList<Pelicula> miLista;
     RecyclerView miRecycler;
@@ -33,7 +32,11 @@ public class PeliculasVistas extends AppCompatActivity {
     static ImageView fotoPelicula;
     SwipeRefreshLayout refrescar;
 
-
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +50,9 @@ public class PeliculasVistas extends AppCompatActivity {
         fotoPelicula = findViewById(R.id.idFotoEpisodio);
         refrescar = findViewById(R.id.refrescarPeliculasVistas);
 
-        miLista = new ArrayList<Pelicula>();//Lista de objetos
-        //miLista=cargarDatos(miLista);//Cargamos los datos del array
+        miLista = new ArrayList<Pelicula>();
         miRecycler = (RecyclerView) findViewById(R.id.miRecyclerVistaPeliculasVistas);
-        //Pasos importantes
+        //Si se clica en una pelicula,esta se mostrará en la pantalla de pelicula detallada
         miRecycler.setLayoutManager(new LinearLayoutManager(this));
         elAdaptador = new AdaptadorPeliculas(this, miLista);
         elAdaptador.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +68,7 @@ public class PeliculasVistas extends AppCompatActivity {
             }
         });
         miRecycler.setAdapter(elAdaptador);
-
+        //Se volverá a cargar la información de la activity si el usuario desliza el dedo de arriba a abajo de la pantalla
         refrescar.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -84,6 +86,7 @@ public class PeliculasVistas extends AppCompatActivity {
         ArrayList<Pelicula> aux  = new ArrayList<>();
         try {
             ComponenteCAD cad = new ComponenteCAD(this);
+            //Muestra la información de las peliculas de la base de datos con estado vista
             aux = cad.leerPeliculas("V");
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
@@ -95,15 +98,12 @@ public class PeliculasVistas extends AppCompatActivity {
 
     }
 
-
-
-
-
+    /**
+     * Método que muestra la pantallla de mostrar pelicula en detalle
+     */
     private void mostrarPelicula() {
         Intent i = new Intent(this,PeliculaDetallada.class);
         startActivity(i);
     }
-
-
 
 }

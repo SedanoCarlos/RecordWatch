@@ -30,7 +30,9 @@ import java.util.ArrayList;
 
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 
-
+/**
+ * Activity que nos muestra el listado de temporadas de una serie
+ */
 public class TemporadasActivity extends AppCompatActivity {
 
     ArrayList<Temporada> miLista;
@@ -44,6 +46,11 @@ public class TemporadasActivity extends AppCompatActivity {
     static public String tituloTemporadaElegida;
 
 
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,16 +62,13 @@ public class TemporadasActivity extends AppCompatActivity {
         numeroCapitulos = findViewById(R.id.idNumeroCapitulos);
         fotoTemporada = findViewById(R.id.idFotoEpisodio);
 
-        miLista = new ArrayList<Temporada>();//Lista de objetos
-        //miLista=cargarDatos(miLista);//Cargamos los datos del array
+        miLista = new ArrayList<Temporada>();
         miRecycler = (RecyclerView) findViewById(R.id.miRecylerVistaTemporadas);
-        //Pasos importantes
         miRecycler.setLayoutManager(new LinearLayoutManager(this));
         elAdaptador = new AdaptadorTemporadas(this, miLista);
         elAdaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Sacamos el nombre del elemento seleccionado
                 CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
                 numeroTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getNumeroTemporada();
                 tituloTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
@@ -75,13 +79,9 @@ public class TemporadasActivity extends AppCompatActivity {
             }
         });
         miRecycler.setAdapter(elAdaptador);
-
-
-        String url="https://api.themoviedb.org/3/tv/"+codigoSerieElegida+"?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
+        String url = "https://api.themoviedb.org/3/tv/" + codigoSerieElegida + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         RequestQueue queue = Volley.newRequestQueue(this);
         primeraTemporada = 0;
-
-
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -104,15 +104,13 @@ public class TemporadasActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
         }
         );
         queue.add(request);
-
-
         ArrayList<Temporada> aux = new ArrayList<>();
         try {
+            //Busca la lista de temporadas de la serie a mostrar en la api
             ComponenteCAD cad = new ComponenteCAD(this);
             aux = cad.leerTemporadasWS(codigoSerieElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
@@ -124,6 +122,9 @@ public class TemporadasActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Método que muestra la pantallla de mostrar temporada en detalle
+     */
     private void mostrarTemporada() {
         Intent i = new Intent(this, TemporadaDetallada.class);
         startActivity(i);

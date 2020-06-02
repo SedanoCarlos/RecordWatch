@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,13 +13,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.ArrayList;
 
 import com.recordwatch.recordwatch.adaptadores.AdaptadorSeries;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.pojos.Serie;
 
-import java.util.ArrayList;
-
+/**
+ * Activity que muestra un listado de series populares además de darnos la opción de buscar una serie
+ * nosotros mismos o ver un listado de nuestras series dependiendo de su estado
+ */
 public class SeriesActivity extends AppCompatActivity {
 
     ArrayList<Serie> miLista;
@@ -32,8 +34,11 @@ public class SeriesActivity extends AppCompatActivity {
     public static  int codigoSerieElegida;
     SwipeRefreshLayout refrescar;
 
-
-
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +70,6 @@ public class SeriesActivity extends AppCompatActivity {
             }
         });
         miRecycler.setAdapter(elAdaptador);
-
         refrescar.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -93,19 +97,24 @@ public class SeriesActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Método que muestra el menú desplegable en el action bar de la activity
+     * @param menu menu desplegable con opciones
+     * @return objeto de tipo boolean
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_series, menu);
         return true;
     }
 
+    /**
+     * Método encargado de mostrar una activity en función de la opción del menu elegido
+     * @param item elemento del menú indicado por el usuario
+     * @return objeto de tipo boolean
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
+        //Depende de la opcion elegida nos lleva a una activity diferente
         if (id == R.id.opcionSerieSiguiendo) {
             Intent i = new Intent(this,SeriesSiguiendo.class);
             startActivity(i);
@@ -121,12 +130,18 @@ public class SeriesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Método que muestra la pantallla de buscar series
+     * @param view de tipo View usada para la representación en pantalla de los elementos pertenecientes a la activity
+     */
     public void menuBuscarSerie(View view){
         Intent i = new Intent(this,BuscarSerie.class);
         startActivity(i);
     }
 
-
+    /**
+     * Método que muestra la pantallla de mostrar serie en detalle
+     */
     private void mostrarSerie() {
         Intent i = new Intent(this,SerieDetallada.class);
         startActivity(i);

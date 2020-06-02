@@ -14,18 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.recordwatch.recordwatch.adaptadores.AdaptadorEpisodios;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
-import com.recordwatch.recordwatch.componentes.ComponenteWS;
 import com.recordwatch.recordwatch.pojos.Episodio;
 import com.recordwatch.recordwatch.pojos.Temporada;
+import com.recordwatch.recordwatch.utilidades.TtsManager;
 
-import static com.recordwatch.recordwatch.CopiaSeguridad.cad;
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.numeroTemporadaElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.tituloTemporadaElegida;
 
 import java.util.ArrayList;
 
-
+/**
+ * Activity que nos muestra la información de una temporada en detalle
+ */
 public class TemporadaDetallada extends AppCompatActivity {
 
     ArrayList<Episodio> miLista;
@@ -34,9 +35,14 @@ public class TemporadaDetallada extends AppCompatActivity {
     TextView sinopsis;
     ImageView foto;
     Button leerTexto;
-    private TtsManager ttsManager = null;
-    private int stopTtsManager = 0;
+    private TtsManager lecturaVoz = null;
+    private int hablando = 0;
 
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,18 +53,14 @@ public class TemporadaDetallada extends AppCompatActivity {
         sinopsis = findViewById(R.id.tvSinopsis);
         sinopsis.setMovementMethod(new ScrollingMovementMethod());
         foto = findViewById(R.id.ivPoster);
-        miLista = new ArrayList<Episodio>();//Lista de objetos
+        miLista = new ArrayList<Episodio>();
         leerTexto = findViewById(R.id.buttonLeer);
-        //miLista=cargarDatos(miLista);//Cargamos los datos del array
         miRecycler = (RecyclerView) findViewById(R.id.miRecylerVistaEpisodios);
-        //Pasos importantes
         miRecycler.setLayoutManager(new LinearLayoutManager(this));
         elAdaptador = new AdaptadorEpisodios(this,miLista);
         elAdaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Sacamos el nombre del elemento seleccionado
-
                 elAdaptador.notifyItemChanged(miRecycler.getChildAdapterPosition(v));
             }
         });
@@ -67,19 +69,17 @@ public class TemporadaDetallada extends AppCompatActivity {
         leerTexto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                readingDescription();
+                leerSinopsis();
             }
         });
 
-
-
-        ComponenteCAD ws = null;
+        ComponenteCAD cad = null;
         Temporada temporada = new Temporada();
         try {
+            //Buscar temporada en la api
             cad = new ComponenteCAD(this);
             temporada = cad.leerTemporada(codigoSerieElegida,numeroTemporadaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
-
         }
         sinopsis.setText(temporada.getSinopsis());
         String poster = temporada.getRutaPoster();
@@ -88,10 +88,9 @@ public class TemporadaDetallada extends AppCompatActivity {
         } else {
             Glide.with(TemporadaDetallada.this).load(poster).placeholder(R.drawable.pelicula).into(foto);
         }
-
-
         ArrayList<Episodio> aux  = new ArrayList<>();
         try {
+            //Buscar los episodios en la api y si están an la base de datos mostrar su estado como visto
             cad = new ComponenteCAD(this);
             aux = cad.leerEpisodios(codigoSerieElegida,numeroTemporadaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
@@ -101,38 +100,46 @@ public class TemporadaDetallada extends AppCompatActivity {
             miLista.add(aux.get(i));
             elAdaptador.notifyItemChanged(i);
         }
-
-        checkDescription();
+        comprobarSinopsis();
     }
 
-    private void checkDescription() {
+    /**
+     * Método que comprueba si hay sinopsis de la temporada
+     */
+    private void comprobarSinopsis() {
         if (!sinopsis.getText().toString().isEmpty()) {
-            ttsManager = new TtsManager();
-            ttsManager.init(this);
+            lecturaVoz = new TtsManager();
+            lecturaVoz.init(this);
             leerTexto.setVisibility(View.VISIBLE);
         } else {
             leerTexto.setVisibility(View.INVISIBLE);
         }
     }
 
-    public void readingDescription() {
-        switch (stopTtsManager) {
+    /**
+     * Método que comprueba si la lectura en voz todavía se esta reproduciendo
+     */
+    public void leerSinopsis() {
+        switch (hablando) {
             case 0:
-                stopTtsManager = 1;
-                ttsManager.initQueue(sinopsis.getText().toString());
+                hablando = 1;
+                lecturaVoz.initQueue(sinopsis.getText().toString());
                 break;
             case 1:
-                stopTtsManager = 0;
-                ttsManager.stop();
+                hablando = 0;
+                lecturaVoz.stop();
                 break;
         }
     }
 
+    /**
+     * Método que corta la reproducción de la lectura en voz en caso de que se salga de la actividad
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (ttsManager != null) {
-            ttsManager.shutDown();
+        if (lecturaVoz != null) {
+            lecturaVoz.shutDown();
         }
     }
 }

@@ -3,8 +3,6 @@ package com.recordwatch.recordwatch;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,11 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,21 +20,19 @@ import com.google.android.gms.drive.Drive;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
-import com.recordwatch.recordwatch.componentes.ComponenteBD;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.googledrive.DriveServiceHelper;
 import com.recordwatch.recordwatch.googledrive.GoogleDriveFileHolder;
-import com.recordwatch.recordwatch.hash.sha;
 import com.recordwatch.recordwatch.pojos.Usuario;
-
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.List;
 
 import static com.recordwatch.recordwatch.googledrive.DriveServiceHelper.getGoogleDriveService;
 
-
+/**
+ * Activity donde gestionamos la subida y bajada de las copias de seguridad del aplicativo
+ */
 public class CopiaSeguridad extends AppCompatActivity {
 
     private static final int REQUEST_CODE_SIGN_IN = 100;
@@ -55,8 +48,11 @@ public class CopiaSeguridad extends AppCompatActivity {
     TextView cuentaCorreo;
     String correo;
 
-
-
+    /**
+     * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
+     * por primera vez
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +62,6 @@ public class CopiaSeguridad extends AppCompatActivity {
         progressDialogCopiar = new ProgressDialog(CopiaSeguridad.this);
         progressDialogRestaurar = new ProgressDialog(CopiaSeguridad.this);
         cuentaCorreo = findViewById(R.id.tvCuentaCorreo);
-
         try {
             cad = new ComponenteCAD(CopiaSeguridad.this);
             contraseña = cad.leerUsuarios().getContrasena();
@@ -77,6 +72,9 @@ public class CopiaSeguridad extends AppCompatActivity {
 
     }
 
+    /**
+     * Método que comprueba si ya se ha iniciado sesión en alguna cuenta de google drive anteriormente
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -87,20 +85,26 @@ public class CopiaSeguridad extends AppCompatActivity {
             mDriveServiceHelper = new DriveServiceHelper(getGoogleDriveService(getApplicationContext(), account, "appName"));
 
         }
-        if(account != null) {
+        if (account != null) {
             correo = account.getEmail();
             cuentaCorreo.setVisibility(View.VISIBLE);
             cuentaCorreo.setText("Inicio de Sesión en cuenta: \n" + correo);
         }
     }
 
+    /**
+     * Método que llama al método startActiviyForResult pasandole como valor una cuenta de google drive existente
+     */
     private void signIn() {
-
         mGoogleSignInClient = buildGoogleSignInClient();
         startActivityForResult(mGoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-
     }
 
+    /**
+     * Método que construye el objeto GoogleSignInClient el cual guarda como objetos una cuenta de google drive iniciada
+     * en el dispositivo físico
+     * @return objeto de tipo GoogleSignInClient
+     */
     private GoogleSignInClient buildGoogleSignInClient() {
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -110,26 +114,34 @@ public class CopiaSeguridad extends AppCompatActivity {
         return GoogleSignIn.getClient(getApplicationContext(), signInOptions);
     }
 
+    /**
+     * Método que llama a la api de google drive
+     * @param requestCode codigo de tipo int que indica el numero de resultado de la llamada
+     * @param resultCode codigo de tipo int que indica el numero de resultado devuelto
+     * @param resultData parámetro de tipo Intent que guarda los datos del resultado de la llamada
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         switch (requestCode) {
             case REQUEST_CODE_SIGN_IN:
                 if (resultCode == Activity.RESULT_OK && resultData != null) {
                     handleSignInResult(resultData);
-
                 } else {
                     Toast.makeText(CopiaSeguridad.this, "Fallo al iniciar sesión.Comprueba tu conexion a Internet", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "" + requestCode + " : " + resultCode + " : " + resultData);
                 }
-
         }
         super.onActivityResult(requestCode, resultCode, resultData);
     }
 
-    public void test() {
-        System.out.println("test");
-    }
+//    public void test() {
+//        System.out.println("test");
+//    }
 
+    /**
+     * Método que inicia sesión en la cuenta de google drive indicada
+     * @param result parámetro de tipo Intent que guarda los datos del resultado de la llamada a la api
+     */
     private void handleSignInResult(Intent result) {
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
@@ -154,17 +166,22 @@ public class CopiaSeguridad extends AppCompatActivity {
     }
 
 
+    /**
+     * Método que realiza una copia de la base de datos y la sube al Google Drive
+     * @param view Representación de los componentes especificados en la actividad
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void exportDatabase(View view) {
+        //Comprueba si se ha iniciado sesión en una cuenta de google
         if (mDriveServiceHelper == null) {
             Toast.makeText(CopiaSeguridad.this, "Primero debes iniciar sesión con tu cuenta de Google Drive", Toast.LENGTH_LONG).show();
             return;
         }
+        //Se activa la animación de rueda de carga mientras se realiza la copia
         progressDialogCopiar.show();
         progressDialogCopiar.setContentView(R.layout.progress_dialog);
         progressDialogCopiar.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-
+        //Busca el fichero indicado en el Google Drive
         mDriveServiceHelper.searchFile("RecordWatch", "application/octet-stream")
                 .addOnSuccessListener(new OnSuccessListener<List<GoogleDriveFileHolder>>() {
                     @Override
@@ -173,7 +190,6 @@ public class CopiaSeguridad extends AppCompatActivity {
                         if (googleDriveFileHolders != null) {
                             GoogleDriveFileHolder googleDriveFileHolder = googleDriveFileHolders.get(0);
                             idFile = googleDriveFileHolder.getId();
-
                         }
                         Log.d(TAG, "onSuccess2: " + idFile);
                     }
@@ -185,8 +201,7 @@ public class CopiaSeguridad extends AppCompatActivity {
                 Toast.makeText(CopiaSeguridad.this, "Comprueba tu conexion a Internet", Toast.LENGTH_LONG).show();
             }
         });
-
-
+        //Eliminado el fichero indicado en el Google Drive
         mDriveServiceHelper.deleteFolderFile(idFile).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -195,11 +210,9 @@ public class CopiaSeguridad extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
             }
         });
-
-
+        //Sube la base de datos en un archivo a Google Drive
         mDriveServiceHelper.uploadFile(new java.io.File("/data/data/com.recordwatch.recordwatch/databases/", "RecordWatch"), "application/octet-stream", null)
                 .addOnSuccessListener(new OnSuccessListener<GoogleDriveFileHolder>() {
                     @Override
@@ -219,22 +232,28 @@ public class CopiaSeguridad extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Método que descarga la copia de seguridad desde Google Drive y la sustituye por la actual de la base de datos
+     * @param view Representación de los componentes especificados en la actividad
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void importDatabase(View view) {
+        //Comprueba si se ha iniciado sesión en una cuenta de google
         if (mDriveServiceHelper == null) {
             Toast.makeText(CopiaSeguridad.this, "Primero debes iniciar sesión con tu cuenta de Google Drive", Toast.LENGTH_LONG).show();
             return;
         }
+        //Se activa la animación de rueda de carga mientras se realiza la copia
 
         progressDialogRestaurar.show();
         progressDialogRestaurar.setContentView(R.layout.progress_dialog2);
         progressDialogRestaurar.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
         try {
             Log.d("Contraseña", "Contraseña Inicial : " + cad.leerUsuarios().getContrasena());
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }
+        //Busca el fichero indicado en el Google Drive
         mDriveServiceHelper.searchFile("RecordWatch", "application/octet-stream")
                 .addOnSuccessListener(new OnSuccessListener<List<GoogleDriveFileHolder>>() {
                     @Override
@@ -265,7 +284,7 @@ public class CopiaSeguridad extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-
+                            //Descarga el fichero indicado desde Google Drive y lo sustituye por la actual base de datos
                             mDriveServiceHelper.downloadFile(new File("/data/data/com.recordwatch.recordwatch/databases/", "RecordWatch"), "" + idFile + "")
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -291,7 +310,6 @@ public class CopiaSeguridad extends AppCompatActivity {
                                 public void onFailure(@NonNull Exception e) {
                                     progressDialogRestaurar.dismiss();
                                     Log.d(TAG, "onFailureDownload: " + e.getMessage());
-
                                 }
                             });
                         } else {
@@ -308,10 +326,6 @@ public class CopiaSeguridad extends AppCompatActivity {
                         "alguna copia en tu cuenta de Google Drive", Toast.LENGTH_LONG).show();
             }
         });
-
-
-
     }
-
 
 }

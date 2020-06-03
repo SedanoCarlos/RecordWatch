@@ -20,8 +20,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import static com.recordwatch.recordwatch.TemporadasActivity.numeroTemporadaElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.primeraTemporada;
+import static com.recordwatch.recordwatch.SerieDetallada.sinopsisSerie;
 
 
 /**
@@ -318,7 +318,7 @@ public class ComponenteWS {
      * algun problema al operar con la base de datos
      */
     public Temporada leerTemporada(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
-        url = "https://api.themoviedb.org/3/tv/" + serieId + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
+        url = "https://api.themoviedb.org/3/tv/" + serieId + "/season/" + numeroTemporada + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         String response = null;
         try {
             response = new JSONTask().execute().get();
@@ -336,9 +336,20 @@ public class ComponenteWS {
         Temporada temporada = new Temporada();
         try {
             String sinopsisDefecto = datos.getString("overview");
-            temporada.setSinopsis(sinopsisDefecto);
-            String poster = "https://image.tmdb.org/t/p/w500" + datos.getString("poster_path");
-            temporada.setRutaPoster(poster);
+            if(sinopsisDefecto.equals("")){
+                temporada.setSinopsis(sinopsisSerie);
+            }else{
+                temporada.setSinopsis(sinopsisDefecto);
+
+            }
+            int numeroEpisodios = datos.getJSONArray("episodes").length();
+            temporada.setNumeroCapitulos(numeroEpisodios);
+            String foto = datos.getString("poster_path");
+            if (foto.equals("null")) {
+                temporada.setRutaPoster("");
+            } else {
+                temporada.setRutaPoster("https://image.tmdb.org/t/p/w500" + foto);
+            }
         } catch (JSONException ex) {
             ex.printStackTrace();
         }
@@ -358,6 +369,12 @@ public class ComponenteWS {
         ArrayList<Temporada> miLista = new ArrayList<>();
         url = "https://api.themoviedb.org/3/tv/" + serieId + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         String response = null;
+        int numeroTemporada;
+        if(primeraTemporada == 0){
+            numeroTemporada = 0;
+        }else{
+            numeroTemporada = 1;
+        }
         try {
             response = new JSONTask().execute().get();
         } catch (ExecutionException e) {
@@ -376,8 +393,8 @@ public class ComponenteWS {
                     JSONObject datos = (JSONObject) array.get(i);
                     int codigo = datos.getInt("id");
                     temporada.setSerieId(codigo);
-                    numeroTemporadaElegida = i;
-                    temporada.setNumeroTemporada(numeroTemporadaElegida);
+                    temporada.setNumeroTemporada(numeroTemporada);
+                    numeroTemporada++;
                     String nombre = datos.getString("name");
                     temporada.setTituloTemporada(nombre);
                     int numeroCapitulos = datos.getInt("episode_count");
@@ -410,11 +427,7 @@ public class ComponenteWS {
      */
     public ArrayList<Episodio> leerEpisodios(Integer serieId, int numeroTemporada) throws ExcepcionRecordWatch {
         ArrayList<Episodio> miLista = new ArrayList<>();
-        if (primeraTemporada == 0) {
-            url = "https://api.themoviedb.org/3/tv/" + serieId + "/season/" + numeroTemporada + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
-        } else {
-            url = "https://api.themoviedb.org/3/tv/" + serieId + "/season/" + (numeroTemporada + 1) + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
-        }
+        url = "https://api.themoviedb.org/3/tv/" + serieId + "/season/" + numeroTemporada + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         String response = null;
         try {
             response = new JSONTask().execute().get();

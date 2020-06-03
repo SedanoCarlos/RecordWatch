@@ -302,7 +302,7 @@ public class ComponenteCAD {
 
     /**
      * Método que utiliza el ComponenteBD para insertar una temporada en la base de datos
-     * @param t objeto de tipo serie que el ComponenteBD insertará en la tabla Temporadas
+     * @param t objeto de tipo temporada que el ComponenteBD insertará en la tabla Temporadas
      * @return numero de registros afectados
      * @throws ExcepcionRecordWatch
      */
@@ -432,9 +432,22 @@ public class ComponenteCAD {
      * @return objeto de tipo serie
      * @throws ExcepcionRecordWatch
      */
-    public ArrayList<Episodio> leerEpisodios(Integer serieId,int numeroTemporada) throws ExcepcionRecordWatch {
+    public ArrayList<Episodio> leerEpisodiosWS(Integer serieId,int numeroTemporada) throws ExcepcionRecordWatch {
         ComponenteWS ws = new ComponenteWS();
         ArrayList<Episodio> miLista = ws.leerEpisodios(serieId,numeroTemporada);
+        return miLista;
+    }
+
+    /**
+     * Método que utiliza el ComponenteBD para leer varios episodios de la tabla Episodios
+     * @param serieId entero que indicará al ComponenteWS que registro de la tabla Episodios mostrar
+     * @param numeroTemporada entero que indicará al ComponenteWS que numero de temporada buscar en la tabla Episodios
+     * @return objeto de tipo serie
+     * @throws ExcepcionRecordWatch
+     */
+    public ArrayList<Episodio> leerEpisodiosBD(Integer serieId,int numeroTemporada) throws ExcepcionRecordWatch {
+        ComponenteBD bd = new ComponenteBD(context);
+        ArrayList<Episodio> miLista = bd.leerEpisodios(serieId,numeroTemporada);
         return miLista;
     }
 

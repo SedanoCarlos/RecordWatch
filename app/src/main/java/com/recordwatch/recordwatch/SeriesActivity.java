@@ -7,6 +7,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,6 +64,7 @@ public class SeriesActivity extends AppCompatActivity {
                 //Sacamos el nombre del elemento seleccionado
                 CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTitulo();
                 codigoSerieElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getSerieId();
+                Log.d("TAG","Codigo de serie elegida : "+codigoSerieElegida);
                 Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
                 toast.show();
                 mostrarSerie();

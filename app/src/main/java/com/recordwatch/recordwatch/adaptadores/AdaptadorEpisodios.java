@@ -9,18 +9,24 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.recordwatch.recordwatch.componentes.ComponenteBD;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
+import com.recordwatch.recordwatch.componentes.ComponenteWS;
 import com.recordwatch.recordwatch.pojos.Episodio;
 import com.recordwatch.recordwatch.ExcepcionRecordWatch;
 import com.recordwatch.recordwatch.R;
 import com.recordwatch.recordwatch.pojos.Serie;
+
 import java.util.ArrayList;
 
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.numeroTemporadaElegida;
+import static com.recordwatch.recordwatch.TemporadasActivity.primeraTemporada;
 
 /**
  * Clase que utilizamos para crear y mostrar una lista de objetos de tipo Episodio
@@ -33,8 +39,9 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
     /**
      * Método que crea una instancia de un objeto de tipo AdaptadorEpisodios
+     *
      * @param mContext indica la actividad desde donde es llamada la clase
-     * @param miLista que pasa un listado de objetos de tipo episodio
+     * @param miLista  que pasa un listado de objetos de tipo episodio
      */
     public AdaptadorEpisodios(Context mContext, ArrayList<Episodio> miLista) {
         this.mContext = mContext;
@@ -43,7 +50,8 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
     /**
      * Crea la vista de la lista de episodios
-     * @param parent indica la vista donde se reflejara la lista
+     *
+     * @param parent   indica la vista donde se reflejara la lista
      * @param viewType indica el tipo de la vista
      * @return objeto de tipo vista
      */
@@ -57,7 +65,8 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
     /**
      * Guarda los datos asignados en la lista en un holder
-     * @param holder objeto que guarda el contenido de la vista
+     *
+     * @param holder   objeto que guarda el contenido de la vista
      * @param position cada una de las posiciones de la lista
      */
     @Override
@@ -67,6 +76,7 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
     /**
      * Comprueba que la lista tiene elementos y si es así indica cuantos
+     *
      * @return numero de elementos en la lista
      */
     @Override
@@ -78,6 +88,7 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
     /**
      * Se asigna el click de la vista a nuestro escuchador
+     *
      * @param escucha indica nuestro escuchador para la vista
      */
     public void setOnClickListener(View.OnClickListener escucha) {
@@ -86,11 +97,12 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
     /**
      * Escucha para cuando se clica en un elemento de la lista
+     *
      * @param v elemento de la lista
      */
     @Override
     public void onClick(View v) {
-        if(escuchador!=null) escuchador.onClick(v);
+        if (escuchador != null) escuchador.onClick(v);
     }
 
 
@@ -103,6 +115,7 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
         /**
          * Declaración de cada uno de los subelementos de cada elemento de la lista
+         *
          * @param itemView cada elemento de la vista
          */
         public ViewHolderDatos(@NonNull View itemView) {
@@ -113,7 +126,7 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
             visto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(escuchador!=null){
+                    if (escuchador != null) {
                         int position = getAdapterPosition();
                         cambiarEstado(position);
                     }
@@ -125,13 +138,18 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
         /**
          * Pasa cada dato de la serie a un elemento de la lista
+         *
          * @param episodio elemento pasado a la lista
          */
         public void asignarDatos(Episodio episodio) {
             //Se asigna los datos del objeto recibido a las variables
             String poster = episodio.getRutaPoster();
             nombre.setText("" + episodio.getNumeroEpisodio() + "." + episodio.getTituloEpisodio());
-            Glide.with(mContext).load(poster).into(foto);
+            if(poster.equals("")){
+                Glide.with(mContext).load(R.drawable.series).placeholder(R.drawable.series).into(foto);
+            }else{
+                Glide.with(mContext).load(poster).placeholder(R.drawable.series).into(foto);
+            }
             Episodio aux = new Episodio();
             try {
                 ComponenteCAD cad = new ComponenteCAD(mContext);
@@ -149,13 +167,16 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
 
         /**
          * Al clicar en un episodio se cambia su estado
+         *
          * @param position elemento pasado a la lista
          */
         public void cambiarEstado(int position) {
             Episodio aux = new Episodio();
-            ComponenteCAD cad = null;
+            ComponenteCAD cad;
+            ComponenteBD bd = null;
             try {
                 cad = new ComponenteCAD(mContext);
+                bd = new ComponenteBD(mContext);
                 if (cad.leerSerieBD(codigoSerieElegida) != null) {
                     aux = cad.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
                     Episodio episodio = new Episodio();
@@ -173,28 +194,39 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
                         visto.setBackgroundResource(R.drawable.ojo);
                     }
                     boolean episodiosVistos = true;
-                    ComponenteCAD cad1 = new ComponenteCAD(mContext);
-                    int numeroTemporadas  = (cad.leerTemporadasBD(codigoSerieElegida)).size();
-                    for (int i=0;i<numeroTemporadas;i++){
-                        int numeroEpisodiosWS = (cad1.leerTemporada(codigoSerieElegida,i)).getNumeroCapitulos();
-                        int numeroEpisodiosBD = (cad.leerEpisodios(codigoSerieElegida,i)).size();
-                        if(numeroEpisodiosWS != numeroEpisodiosBD){
+                    ComponenteWS ws = new ComponenteWS();
+                    int numeroTemporadas = (ws.leerTemporadas(codigoSerieElegida)).size();
+                    Log.d("Prueba 1",""+numeroTemporadas);
+                    if(primeraTemporada==0){
+                    }else{
+                        numeroTemporadas++;
+                    }
+                    for (int i = ws.leerTemporadas(codigoSerieElegida).get(0).getNumeroTemporada(); i < numeroTemporadas; i++) {
+                        Log.d("TAG",""+codigoSerieElegida+" , "+i);
+                        int numeroEpisodiosWS = (ws.leerTemporada(codigoSerieElegida, i)).getNumeroCapitulos();
+                        int numeroEpisodiosBD = 0;
+                        if(bd.leerEpisodios(codigoSerieElegida,i)!=null) {
+                            numeroEpisodiosBD = (bd.leerEpisodios(codigoSerieElegida, i)).size();
+                        }
+                        Log.d("Prueba 2",""+numeroEpisodiosBD+" == "+numeroEpisodiosWS);
+                        if (numeroEpisodiosWS != numeroEpisodiosBD) {
                             episodiosVistos = false;
                             break;
                         }
                     }
-                    if(episodiosVistos = true){
+                    if (episodiosVistos) {
                         Serie serie = new Serie();
                         serie.setSerieId(codigoSerieElegida);
                         serie.setEstado("V");
-                        cad.modificarSerie(codigoSerieElegida,serie);
+                        bd.modificarSerie(codigoSerieElegida, serie);
+                        cad.modificarSerie(codigoSerieElegida, serie);
                     }
-                }else{
-                    Toast.makeText(mContext,"Primero indica la serie como Pendiente o Siguiendo",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(mContext, "Primero indica la serie como Pendiente o Siguiendo", Toast.LENGTH_LONG).show();
                 }
-                } catch(ExcepcionRecordWatch excepcionRecordWatch){
-                    excepcionRecordWatch.printStackTrace();
-                }
+            } catch (ExcepcionRecordWatch excepcionRecordWatch) {
+                excepcionRecordWatch.printStackTrace();
+            }
         }
     }
 }

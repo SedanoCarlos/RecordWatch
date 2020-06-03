@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#8E2196F3"
     android:visibility="visible"
     tools:context=".CopiaSeguridad">
 
@@ -14,6 +15,7 @@
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:text="TextView"
+        android:textColor="#673AB7"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/buttonCrearCopiaBD"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,6 +27,7 @@
         android:layout_width="225dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="200dp"
+        android:background="@drawable/borde_redondo"
         android:onClick="importDatabase"
         android:text="RESTAURAR DATOS"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,6 +40,7 @@
         android:id="@+id/buttonCrearCopiaBD"
         android:layout_width="225dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/borde_redondo"
         android:onClick="exportDatabase"
         android:text="CREAR COPIA DE SEGURIDAD"
         app:layout_constraintBottom_toTopOf="@+id/buttonRestaurarCopiaBD"

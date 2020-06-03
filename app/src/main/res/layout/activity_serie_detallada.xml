@@ -1,82 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#8E2196F3"
     android:orientation="vertical"
     tools:context=".SerieDetallada">
 
     <LinearLayout
-        android:layout_width="250dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/ivPoster"
-            android:layout_width="150dp"
-            android:layout_height="200dp"
-            app:srcCompat="@drawable/series" />
-
-        <Button
-            android:id="@+id/buttonSerieRegistrada"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvTitulo"
-        android:layout_width="250dp"
-        android:layout_height="65dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="TITULO"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/tvValoracion"
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:text="VALORACION"
-        android:textSize="18sp" />
-
-    <ScrollView
-        android:layout_width="250dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:padding="10px">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="180dp">
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvSinopsis"
-                android:layout_width="match_parent"
-                android:layout_height="180dp" />
+            <ImageView
+                android:id="@+id/ivPoster"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                app:srcCompat="@drawable/series" />
+
+            <Button
+                android:id="@+id/buttonSerieRegistrada"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp" />
+
         </LinearLayout>
-    </ScrollView>
 
-    <Button
-        android:id="@+id/buttonLeer"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:background="@drawable/altavoz" />
-    <Button
-        android:id="@+id/buttonMostrarTemporadas"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="mostrarTemporadas"
-        android:text="TEMPORADAS" />
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="250dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="TITULO"
+            android:textColor="#673AB7"
+            android:textSize="24sp" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvValoracion"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:text="VALORACION"
+            android:textColor="#673AB7"
+            android:textSize="18sp" />
+
+        <ScrollView
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:padding="10px">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp">
+
+                <TextView
+                    android:id="@+id/tvSinopsis"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:textColor="#673AB7" />
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/buttonLeer"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:background="@drawable/altavoz" />
+
+        <Button
+            android:id="@+id/buttonMostrarTemporadas"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/borde_redondo"
+            android:onClick="mostrarTemporadas"
+            android:text="TEMPORADAS" />
+
+    </LinearLayout>
+</ScrollView>

@@ -2,6 +2,7 @@ package com.recordwatch.recordwatch;
 
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -78,21 +79,18 @@ public class TemporadaDetallada extends AppCompatActivity {
         try {
             //Buscar temporada en la api
             cad = new ComponenteCAD(this);
+            Log.d("TAG","A ver : "+codigoSerieElegida+","+numeroTemporadaElegida);
             temporada = cad.leerTemporada(codigoSerieElegida,numeroTemporadaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
         }
         sinopsis.setText(temporada.getSinopsis());
         String poster = temporada.getRutaPoster();
-        if (poster.equals("null")) {
-            Glide.with(TemporadaDetallada.this).load(poster).placeholder(R.drawable.pelicula).into(foto);
-        } else {
-            Glide.with(TemporadaDetallada.this).load(poster).placeholder(R.drawable.pelicula).into(foto);
-        }
+        Glide.with(TemporadaDetallada.this).load(poster).placeholder(R.drawable.series).into(foto);
         ArrayList<Episodio> aux  = new ArrayList<>();
         try {
             //Buscar los episodios en la api y si están an la base de datos mostrar su estado como visto
             cad = new ComponenteCAD(this);
-            aux = cad.leerEpisodios(codigoSerieElegida,numeroTemporadaElegida);
+            aux = cad.leerEpisodiosWS(codigoSerieElegida,numeroTemporadaElegida);
         } catch (ExcepcionRecordWatch excepcionRecordWatch) {
             excepcionRecordWatch.printStackTrace();
         }

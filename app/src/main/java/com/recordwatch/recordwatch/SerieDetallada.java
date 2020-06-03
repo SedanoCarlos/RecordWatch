@@ -35,6 +35,7 @@ public class SerieDetallada extends AppCompatActivity {
     Button leerTexto;
     private TtsManager lecturaVoz = null;
     private int hablando = 0;
+    public static String sinopsisSerie;
 
     /**
      * Metodo en el cual declaramos e inicializamos los componentes de la activity
@@ -101,9 +102,10 @@ public class SerieDetallada extends AppCompatActivity {
         }
         titulo.setText(serie.getTitulo());
         valoracion.setText(serie.getValoracion());
-        sinopsis.setText(serie.getSinopsis());
+        sinopsisSerie = serie.getSinopsis();
+        sinopsis.setText(sinopsisSerie);
         String poster = serie.getRutaPoster();
-        if (poster.equals("null")) {
+        if (poster == null) {
             Glide.with(SerieDetallada.this).load(poster).placeholder(R.drawable.series).into(foto);
         } else {
             Glide.with(SerieDetallada.this).load(poster).placeholder(R.drawable.series).into(foto);
@@ -123,33 +125,52 @@ public class SerieDetallada extends AppCompatActivity {
             aux = cad.leerSerieBD(codigoSerieElegida);
             Serie serie = new Serie();
             if (aux == null) {
-                ComponenteCAD cad2 = new ComponenteCAD(this);
-                ComponenteCAD cad3 = new ComponenteCAD(this);
-                ArrayList<Temporada> listaTemporadas = new ArrayList<>();
-                listaTemporadas = cad.leerTemporadasBD(codigoSerieElegida);
-                if (listaTemporadas == null) {
-                    listaTemporadas = cad3.leerTemporadasWS(codigoSerieElegida);
-                    for (int i = 0; i < listaTemporadas.size(); i++) {
-                        Temporada temporada = new Temporada();
-                        temporada.setSerieId(codigoSerieElegida);
-                        temporada.setNumeroTemporada(i);
-                        cad2.insertarTemporada(temporada);
-                    }
-                }
-                Log.d("Prueba", "" + cad2.leerTemporadasBD(codigoSerieElegida));
                 serie.setSerieId(codigoSerieElegida);
                 if (item.getTitle().equals("Marcar como pendiente")) {
                     serie.setEstado("P");
                     cad.insertarSerie(serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.pendiente));
+                    ArrayList<Temporada> listaTemporadas = new ArrayList<>();
+                    listaTemporadas = cad.leerTemporadasBD(codigoSerieElegida);
+                    if (listaTemporadas == null) {
+                        listaTemporadas = cad.leerTemporadasWS(codigoSerieElegida);
+                        for (int i = 0; i < listaTemporadas.size(); i++) {
+                            Temporada temporada = new Temporada();
+                            temporada.setSerieId(codigoSerieElegida);
+                            temporada.setNumeroTemporada(i);
+                            cad.insertarTemporada(temporada);
+                        }
+                    }
                 } else if (item.getTitle().equals("Marcar como siguiendo")) {
                     serie.setEstado("S");
                     cad.insertarSerie(serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.ojo));
+                    ArrayList<Temporada> listaTemporadas = new ArrayList<>();
+                    listaTemporadas = cad.leerTemporadasBD(codigoSerieElegida);
+                    if (listaTemporadas == null) {
+                        listaTemporadas = cad.leerTemporadasWS(codigoSerieElegida);
+                        for (int i = 0; i < listaTemporadas.size(); i++) {
+                            Temporada temporada = new Temporada();
+                            temporada.setSerieId(codigoSerieElegida);
+                            temporada.setNumeroTemporada(i);
+                            cad.insertarTemporada(temporada);
+                        }
+                    }
                 } else if (item.getTitle().equals("Marcar como vista")) {
                     serie.setEstado("V");
                     cad.insertarSerie(serie);
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.vista));
+                    ArrayList<Temporada> listaTemporadas = new ArrayList<>();
+                    listaTemporadas = cad.leerTemporadasBD(codigoSerieElegida);
+                    if (listaTemporadas == null) {
+                        listaTemporadas = cad.leerTemporadasWS(codigoSerieElegida);
+                        for (int i = 0; i < listaTemporadas.size(); i++) {
+                            Temporada temporada = new Temporada();
+                            temporada.setSerieId(codigoSerieElegida);
+                            temporada.setNumeroTemporada(i);
+                            cad.insertarTemporada(temporada);
+                        }
+                    }
                 } else if (item.getTitle().equals("Sin Clasificar")) {
                     serieRegistrada.setBackground(getResources().getDrawable(R.drawable.nada));
                 }

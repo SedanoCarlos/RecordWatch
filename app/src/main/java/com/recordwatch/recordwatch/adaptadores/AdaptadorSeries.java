@@ -140,7 +140,11 @@ public class AdaptadorSeries extends RecyclerView.Adapter<AdaptadorSeries.ViewHo
             String poster = serie.getRutaPoster();
             titulo.setText(serie.getTitulo());
             valoracion.setText("Valoración : "+serie.getValoracion());
-            Glide.with(mContext).load(poster).placeholder(R.drawable.series).into(foto);
+            if(poster.equals("")){
+                Glide.with(mContext).load(R.drawable.series).placeholder(R.drawable.series).into(foto);
+            }else{
+                Glide.with(mContext).load(poster).placeholder(R.drawable.series).into(foto);
+            }
         }
     }
 }

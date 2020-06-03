@@ -111,7 +111,11 @@ public class AdaptadorTemporadas extends RecyclerView.Adapter<AdaptadorTemporada
             String poster = temporada.getRutaPoster();
             nombre.setText(temporada.getTituloTemporada());
             numeroCapitulos.setText("NºCapítulos: "+temporada.getNumeroCapitulos()+"");
-            Glide.with(mContext).load(poster).into(foto);
+            if(poster.equals("")){
+                Glide.with(mContext).load(R.drawable.series).placeholder(R.drawable.series).into(foto);
+            }else{
+                Glide.with(mContext).load(poster).placeholder(R.drawable.series).into(foto);
+            }
 
 
         }

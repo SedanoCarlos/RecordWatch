@@ -4,15 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#8E2196F3"
     tools:context=".CambiarUsuario">
+
+    <Button
+        android:id="@+id/buttonCambiarContraseña"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/borde_redondo"
+        android:onClick="cambiarContraseña"
+        android:text="CAMBIAR CONTRASEÑA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNuevaContraseña2" />
+
+    <TextView
+        android:id="@+id/tvNuevaContraseña2"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Vuelve a introducir la nueva contraseña"
+        android:textColor="#673AB7"
+        app:layout_constraintBottom_toTopOf="@+id/etNuevaContraseña2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etNuevaContraseña" />
 
     <TextView
         android:id="@+id/tvActualContraseña"
         android:layout_width="250dp"
         android:layout_height="34dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="68dp"
         android:gravity="center"
         android:text="Introduce la contraseña actual"
+        android:textColor="#673AB7"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,29 +48,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/etActualContraseña"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Contraseña actual"
+        android:inputType="textPassword"
+        android:textColor="#009688"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvActualContraseña" />
+
     <TextView
         android:id="@+id/tvNuevaContraseña"
         android:layout_width="250dp"
         android:layout_height="28dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:text="Introduce la nueva contraseña"
+        android:textColor="#673AB7"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etActualContraseña" />
-
-    <Button
-        android:id="@+id/buttonCambiarContraseña"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:onClick="cambiarContraseña"
-        android:text="CAMBIAR CONTRASEÑA"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNuevaContraseña2" />
 
     <EditText
         android:id="@+id/etNuevaContraseña"
@@ -52,33 +84,12 @@
         android:ems="10"
         android:hint="Contraseña nueva"
         android:inputType="textPassword"
+        android:textColor="#009688"
         app:layout_constraintBottom_toTopOf="@+id/tvNuevaContraseña2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNuevaContraseña" />
-
-    <EditText
-        android:id="@+id/etActualContraseña"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:ems="10"
-        android:hint="Contraseña actual"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvActualContraseña" />
-
-    <TextView
-        android:id="@+id/tvNuevaContraseña2"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Vuelve a introducir la nueva contraseña"
-        app:layout_constraintBottom_toTopOf="@+id/etNuevaContraseña2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNuevaContraseña" />
 
     <EditText
         android:id="@+id/etNuevaContraseña2"
@@ -89,6 +100,8 @@
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/buttonCambiarContraseña"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNuevaContraseña2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

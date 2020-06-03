@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 
+
 /**
  * Activity que nos muestra el listado de temporadas de una serie
  */
@@ -48,8 +49,9 @@ public class TemporadasActivity extends AppCompatActivity {
 
     /**
      * Metodo en el cual declaramos e inicializamos los componentes de la activity
+     *
      * @param savedInstanceState parametro que guarda la ultima instancia de la actividad cuando se crea
-     * por primera vez
+     *                           por primera vez
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,14 @@ public class TemporadasActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
-                numeroTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getNumeroTemporada();
+                if (primeraTemporada == 0) {
+                    numeroTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getNumeroTemporada();
+                    Log.d("TAG","aaa"+numeroTemporadaElegida);
+                } else {
+                    numeroTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getNumeroTemporada();
+                    numeroTemporadaElegida++;
+                    Log.d("TAG","bbb"+numeroTemporadaElegida);
+                }
                 tituloTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
                 Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
                 toast.show();
@@ -79,6 +88,7 @@ public class TemporadasActivity extends AppCompatActivity {
             }
         });
         miRecycler.setAdapter(elAdaptador);
+        Log.d("TAG", "Codio de serie elegida 2 : " + codigoSerieElegida);
         String url = "https://api.themoviedb.org/3/tv/" + codigoSerieElegida + "?api_key=2f6c71bda35c7c12888918e27e405df2&language=es-ES";
         RequestQueue queue = Volley.newRequestQueue(this);
         primeraTemporada = 0;

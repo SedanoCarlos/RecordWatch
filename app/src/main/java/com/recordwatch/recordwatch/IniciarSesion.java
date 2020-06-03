@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.math.BigInteger;
 
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
-import com.recordwatch.recordwatch.hash.CodificaciónSHA;
+import com.recordwatch.recordwatch.encriptacion.CodificaciónSHA;
 import com.recordwatch.recordwatch.pojos.Usuario;
 
 /**

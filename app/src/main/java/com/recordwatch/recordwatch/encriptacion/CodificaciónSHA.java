@@ -1,4 +1,4 @@
-package com.recordwatch.recordwatch.hash;
+package com.recordwatch.recordwatch.encriptacion;
 
 import java.security.MessageDigest;
 

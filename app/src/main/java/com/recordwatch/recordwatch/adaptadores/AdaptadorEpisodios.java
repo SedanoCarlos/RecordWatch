@@ -173,10 +173,8 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
         public void cambiarEstado(int position) {
             Episodio aux = new Episodio();
             ComponenteCAD cad;
-            ComponenteBD bd = null;
             try {
                 cad = new ComponenteCAD(mContext);
-                bd = new ComponenteBD(mContext);
                 if (cad.leerSerieBD(codigoSerieElegida) != null) {
                     aux = cad.leerEpisodio(codigoSerieElegida, numeroTemporadaElegida, position);
                     Episodio episodio = new Episodio();
@@ -194,19 +192,19 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
                         visto.setBackgroundResource(R.drawable.ojo);
                     }
                     boolean episodiosVistos = true;
-                    ComponenteWS ws = new ComponenteWS();
-                    int numeroTemporadas = (ws.leerTemporadas(codigoSerieElegida)).size();
+                    int numeroTemporadas = (cad.leerTemporadasWS(codigoSerieElegida)).size();
                     Log.d("Prueba 1",""+numeroTemporadas);
                     if(primeraTemporada==0){
                     }else{
                         numeroTemporadas++;
                     }
-                    for (int i = ws.leerTemporadas(codigoSerieElegida).get(0).getNumeroTemporada(); i < numeroTemporadas; i++) {
+                    //Comprueba si el numero de episodios guardados en la base de datos como vistos coincide con el total de episodios de la serie
+                    for (int i = cad.leerTemporadasWS(codigoSerieElegida).get(0).getNumeroTemporada(); i < numeroTemporadas; i++) {
                         Log.d("TAG",""+codigoSerieElegida+" , "+i);
-                        int numeroEpisodiosWS = (ws.leerTemporada(codigoSerieElegida, i)).getNumeroCapitulos();
+                        int numeroEpisodiosWS = (cad.leerTemporada(codigoSerieElegida, i)).getNumeroCapitulos();
                         int numeroEpisodiosBD = 0;
-                        if(bd.leerEpisodios(codigoSerieElegida,i)!=null) {
-                            numeroEpisodiosBD = (bd.leerEpisodios(codigoSerieElegida, i)).size();
+                        if(cad.leerEpisodiosBD(codigoSerieElegida,i)!=null) {
+                            numeroEpisodiosBD = (cad.leerEpisodiosBD(codigoSerieElegida, i)).size();
                         }
                         Log.d("Prueba 2",""+numeroEpisodiosBD+" == "+numeroEpisodiosWS);
                         if (numeroEpisodiosWS != numeroEpisodiosBD) {
@@ -218,7 +216,6 @@ public class AdaptadorEpisodios extends RecyclerView.Adapter<AdaptadorEpisodios.
                         Serie serie = new Serie();
                         serie.setSerieId(codigoSerieElegida);
                         serie.setEstado("V");
-                        bd.modificarSerie(codigoSerieElegida, serie);
                         cad.modificarSerie(codigoSerieElegida, serie);
                     }
                 } else {

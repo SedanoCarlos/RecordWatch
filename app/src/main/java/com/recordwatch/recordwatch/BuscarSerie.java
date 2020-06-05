@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.recordwatch.recordwatch.adaptadores.AdaptadorSeries;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
@@ -61,10 +60,7 @@ public class BuscarSerie extends AppCompatActivity {
         elAdaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTitulo();
                 codigoSerieElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getSerieId();
-                Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
-                toast.show();
                 mostrarSerie();
                 elAdaptador.notifyItemChanged(miRecycler.getChildAdapterPosition(v));
             }

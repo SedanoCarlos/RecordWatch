@@ -9,7 +9,7 @@ import java.util.Locale;
 /**
  * CLase que lleva a cabo la reproducción a voz de un texto
  */
-public class TtsManager {
+public class TTSManager {
 
     private TextToSpeech lecturaVoz = null;
     private boolean isLoaded = false;

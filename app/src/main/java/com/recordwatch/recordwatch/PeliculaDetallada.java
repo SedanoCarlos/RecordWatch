@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.pojos.Pelicula;
-import com.recordwatch.recordwatch.utilidades.TtsManager;
+import com.recordwatch.recordwatch.utilidades.TTSManager;
 
 import static com.recordwatch.recordwatch.PeliculasActivity.codigoPeliculaElegida;
 
@@ -29,7 +29,7 @@ public class PeliculaDetallada extends AppCompatActivity {
     ImageView foto;
     Button peliculaRegistrada;
     Button leerTexto;
-    private TtsManager lecturaVoz = null;
+    private TTSManager lecturaVoz = null;
     private int hablando = 0;
 
     /**
@@ -197,7 +197,7 @@ public class PeliculaDetallada extends AppCompatActivity {
     private void comprobarSinopsis() {
         //Si existe sinopsis para la pelicula, el botón de lectura en voz se mostrará,de lo contrario se ocultará
         if (!sinopsis.getText().toString().isEmpty()) {
-            lecturaVoz = new TtsManager();
+            lecturaVoz = new TTSManager();
             lecturaVoz.init(this);
             leerTexto.setVisibility(View.VISIBLE);
         } else {

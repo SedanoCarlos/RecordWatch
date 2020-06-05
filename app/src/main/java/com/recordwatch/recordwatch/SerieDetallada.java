@@ -3,7 +3,6 @@ package com.recordwatch.recordwatch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.pojos.Serie;
 import com.recordwatch.recordwatch.pojos.Temporada;
-import com.recordwatch.recordwatch.utilidades.TtsManager;
+import com.recordwatch.recordwatch.utilidades.TTSManager;
 
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 
@@ -33,7 +32,7 @@ public class SerieDetallada extends AppCompatActivity {
     ImageView foto;
     Button serieRegistrada;
     Button leerTexto;
-    private TtsManager lecturaVoz = null;
+    private TTSManager lecturaVoz = null;
     private int hablando = 0;
     public static String sinopsisSerie;
 
@@ -234,7 +233,7 @@ public class SerieDetallada extends AppCompatActivity {
     private void comprobarSinopis() {
         //Si existe sinopsis para la serie, el botón de lectura en voz se mostrará,de lo contrario se ocultará
         if (!sinopsis.getText().toString().isEmpty()) {
-            lecturaVoz = new TtsManager();
+            lecturaVoz = new TTSManager();
             lecturaVoz.init(this);
             leerTexto.setVisibility(View.VISIBLE);
         } else {

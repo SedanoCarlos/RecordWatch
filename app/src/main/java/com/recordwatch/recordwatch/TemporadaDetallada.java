@@ -17,7 +17,7 @@ import com.recordwatch.recordwatch.adaptadores.AdaptadorEpisodios;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.pojos.Episodio;
 import com.recordwatch.recordwatch.pojos.Temporada;
-import com.recordwatch.recordwatch.utilidades.TtsManager;
+import com.recordwatch.recordwatch.utilidades.TTSManager;
 
 import static com.recordwatch.recordwatch.SeriesActivity.codigoSerieElegida;
 import static com.recordwatch.recordwatch.TemporadasActivity.numeroTemporadaElegida;
@@ -36,7 +36,7 @@ public class TemporadaDetallada extends AppCompatActivity {
     TextView sinopsis;
     ImageView foto;
     Button leerTexto;
-    private TtsManager lecturaVoz = null;
+    private TTSManager lecturaVoz = null;
     private int hablando = 0;
 
     /**
@@ -106,7 +106,7 @@ public class TemporadaDetallada extends AppCompatActivity {
      */
     private void comprobarSinopsis() {
         if (!sinopsis.getText().toString().isEmpty()) {
-            lecturaVoz = new TtsManager();
+            lecturaVoz = new TTSManager();
             lecturaVoz.init(this);
             leerTexto.setVisibility(View.VISIBLE);
         } else {

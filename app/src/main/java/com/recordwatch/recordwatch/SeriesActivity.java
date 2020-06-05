@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.ArrayList;
 
 import com.recordwatch.recordwatch.adaptadores.AdaptadorSeries;
@@ -61,8 +62,11 @@ public class SeriesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Sacamos el nombre del elemento seleccionado
+                CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTitulo();
                 codigoSerieElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getSerieId();
                 Log.d("TAG","Codigo de serie elegida : "+codigoSerieElegida);
+                Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
+                toast.show();
                 mostrarSerie();
                 elAdaptador.notifyItemChanged(miRecycler.getChildAdapterPosition(v));
             }

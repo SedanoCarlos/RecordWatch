@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import java.util.ArrayList;
 
 import com.recordwatch.recordwatch.adaptadores.AdaptadorPeliculas;
@@ -60,7 +61,10 @@ public class PeliculasActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Sacamos el nombre del elemento seleccionado
+                CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTitulo();
                 codigoPeliculaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getPeliculaId();
+                Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
+                toast.show();
                 mostrarPelicula();
                 elAdaptador.notifyItemChanged(miRecycler.getChildAdapterPosition(v));
             }

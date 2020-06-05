@@ -71,6 +71,7 @@ public class TemporadasActivity extends AppCompatActivity {
         elAdaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
                 if (primeraTemporada == 0) {
                     numeroTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getNumeroTemporada();
                     Log.d("TAG","aaa"+numeroTemporadaElegida);
@@ -80,6 +81,8 @@ public class TemporadasActivity extends AppCompatActivity {
                     Log.d("TAG","bbb"+numeroTemporadaElegida);
                 }
                 tituloTemporadaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getTituloTemporada();
+                Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
+                toast.show();
                 mostrarTemporada();
                 elAdaptador.notifyItemChanged(miRecycler.getChildAdapterPosition(v));
             }

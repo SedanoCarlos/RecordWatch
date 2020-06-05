@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.recordwatch.recordwatch.adaptadores.AdaptadorPeliculas;
 import com.recordwatch.recordwatch.componentes.ComponenteCAD;
 import com.recordwatch.recordwatch.pojos.Pelicula;
@@ -57,7 +58,10 @@ public class BuscarPelicula extends AppCompatActivity {
         elAdaptador.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CharSequence texto = "Pulsado: " + miLista.get(miRecycler.getChildAdapterPosition(v)).getTitulo();
                 codigoPeliculaElegida = miLista.get(miRecycler.getChildAdapterPosition(v)).getPeliculaId();
+                Toast toast = Toast.makeText(getApplicationContext(), texto, Toast.LENGTH_LONG);
+                toast.show();
                 mostrarPelicula();
                 elAdaptador.notifyItemChanged(miRecycler.getChildAdapterPosition(v));
             }
